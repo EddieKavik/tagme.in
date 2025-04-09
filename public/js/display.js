@@ -18,14 +18,14 @@ function displayAppAccounts() {
    icon('globe', 'sm'),
    elem({
     tagName: 'span',
-    textContent: 'Earth'
-   })
+    textContent: 'Earth',
+   }),
   ],
   events: {
    click() {
     globalRealmTab.scrollIntoView({
      behavior: 'smooth',
-     inline: 'nearest'
+     inline: 'nearest',
     })
     const sessionId = getActiveSessionId()
     if (sessionId !== PUBLIC_SESSION_ID) {
@@ -45,20 +45,20 @@ function displayAppAccounts() {
      globalRealmTab.classList.add('active')
     }
     setActiveSessionId(PUBLIC_SESSION_ID)
-   }
-  }
+   },
+  },
  })
 
  function addAccount(session) {
   const realmTabLabel = elem({
    attributes: {
-    title: session.url
+    title: session.url,
    },
    tagName: 'span',
    textContent:
     session.name ??
     new URL(session.url).origin ??
-    'Error'
+    'Error',
   })
   function switchTo() {
    const sessionId = getActiveSessionId()
@@ -85,7 +85,7 @@ function displayAppAccounts() {
     )
     switchToRealm.realmTab.scrollIntoView({
      behavior: 'smooth',
-     inline: 'nearest'
+     inline: 'nearest',
     })
    }
   }
@@ -129,20 +129,20 @@ function displayAppAccounts() {
           PUBLIC_SESSION_ID
         )
        }
-      }
-     }
-    })
+      },
+     },
+    }),
    ],
    events: {
-    click: switchTo
-   }
+    click: switchTo,
+   },
   })
   element.insertBefore(realmTab, addRealm)
   return {
    session,
    switchTo,
    realmTab,
-   realmTabLabel
+   realmTabLabel,
   }
  }
 
@@ -152,17 +152,17 @@ function displayAppAccounts() {
    icon('plus', 'sm'),
    elem({
     tagName: 'span',
-    textContent: ' realm'
-   })
+    textContent: ' realm',
+   }),
   ],
   events: {
-   click: createSession
-  }
+   click: createSession,
+  },
  })
 
  const element = elem({
   classes: ['app-accounts'],
-  children: [globalRealmTab, addRealm]
+  children: [globalRealmTab, addRealm],
  })
 
  realms = listSessions().map((session) =>
@@ -181,7 +181,7 @@ function displayAppAccounts() {
  setTimeout(function () {
   activeRealmTab.scrollIntoView({
    behavior: 'instant',
-   inline: 'center'
+   inline: 'center',
   })
  })
 
@@ -287,18 +287,18 @@ function displayChannelHome(
    children: [
     elem({
      tagName: 'span',
-     textContent: 'Channel '
+     textContent: 'Channel ',
     }),
     elem({
      attributes: {
-      href: `/#/${encodeURIComponent(channel)}`
+      href: `/#/${encodeURIComponent(channel)}`,
      },
      tagName: 'a',
      textContent: `#${
       channel.length > 0
        ? channel
        : HOME_CHANNEL_ICON
-     }`
+     }`,
     }),
     elem({
      tagName: 'span',
@@ -310,9 +310,9 @@ function displayChannelHome(
       formattedMessageData.length === 1
        ? ''
        : 's'
-     }`
-    })
-   ]
+     }`,
+    }),
+   ],
   })
  )
  const sendToRealm = secondMostRecentRealm
@@ -355,32 +355,32 @@ function displayChannelMessage(
          elem({
           tagName: 'span',
           textContent:
-           'Viewing the only message on channel '
-         })
+           'Viewing the only message on channel ',
+         }),
         ]
       : [
          elem({
           tagName: 'span',
-          textContent: 'Viewing one of '
+          textContent: 'Viewing one of ',
          }),
          elem({
           tagName: 'span',
-          textContent: ` ${formattedMessageData.length} messages on channel `
-         })
+          textContent: ` ${formattedMessageData.length} messages on channel `,
+         }),
         ]),
 
      elem({
       attributes: {
-       href: `/#/${encodeURIComponent(channel)}`
+       href: `/#/${encodeURIComponent(channel)}`,
       },
       tagName: 'a',
       textContent: `#${
        channel.length > 0
         ? channel
         : HOME_CHANNEL_ICON
-      }`
-     })
-    ]
+      }`,
+     }),
+    ],
    })
   )
   attachMessage(
@@ -412,7 +412,7 @@ function attachChannels(container, channels) {
    name: isNamespaced
     ? channelName.split(':')[0] + ':'
     : '',
-   score: 0
+   score: 0,
   })
  }
  lastAttachedChannels = channels.filter(
@@ -422,19 +422,19 @@ function attachChannels(container, channels) {
   elem({
    attributes: {
     'data-tour-off':
-     'Discover popular channels.'
+     'Discover popular channels.',
    },
    classes: ['channel-list'],
    children: [
     elem({
      tagName: 'p',
-     textContent: 'Popular channels'
-    })
+     textContent: 'Popular channels',
+    }),
    ].concat(
     lastAttachedChannels.map((c) =>
      elem({
       attributes: {
-       href: `/#/${encodeURIComponent(c.name)}`
+       href: `/#/${encodeURIComponent(c.name)}`,
       },
       classes: ['channel'],
       tagName: 'a',
@@ -445,15 +445,17 @@ function attachChannels(container, channels) {
       children: [
        elem({
         attributes: {
-         title: Math.round(c.score).toString(10)
+         title: Math.round(c.score).toString(
+          10
+         ),
         },
         tagName: 'span',
-        textContent: niceNumber(c.score)
-       })
-      ]
+        textContent: niceNumber(c.score),
+       }),
+      ],
      })
     )
-   )
+   ),
   })
  )
 }
@@ -475,7 +477,7 @@ function attachMessages(
     tagName: 'p',
     textContent:
      emptyMessage ??
-     'This channel has no content. Be the first to write a message!'
+     'This channel has no content. Be the first to write a message!',
    })
   )
  }
@@ -524,12 +526,12 @@ function attachMessage(
   classes: ['agree'],
   children: [icon('yes')],
   attributes: {
-   title: 'I agree with this'
+   title: 'I agree with this',
   },
   dataset: includeTourAttributes
    ? {
       tour:
-       'Click here to promote the message. The maximum promotion speed is +10 points per hour.'
+       'Click here to promote the message. The maximum promotion speed is +10 points per hour.',
      }
    : undefined,
   events: {
@@ -553,20 +555,20 @@ function attachMessage(
      )
      renderScore()
     }
-   }
+   },
   },
-  tagName: 'button'
+  tagName: 'button',
  })
  const disagreeButton = elem({
   classes: ['disagree'],
   children: [icon('no')],
   attributes: {
-   title: 'I disagree with this'
+   title: 'I disagree with this',
   },
   dataset: includeTourAttributes
    ? {
       tour:
-       'Click here to demote the message. The maximum demotion speed is -10 points per hour.'
+       'Click here to demote the message. The maximum demotion speed is -10 points per hour.',
      }
    : undefined,
   events: {
@@ -588,9 +590,9 @@ function attachMessage(
      disagreeButton.classList.add('disagreed')
      renderScore()
     }
-   }
+   },
   },
-  tagName: 'button'
+  tagName: 'button',
  })
  function renderScore() {
   const messageScoreText = niceNumber(
@@ -608,15 +610,15 @@ function attachMessage(
     attributes: {
      title: Math.round(message.score).toString(
       10
-     )
+     ),
     },
-    textContent: `${messageScoreText}`
+    textContent: `${messageScoreText}`,
    })
   )
   score.appendChild(
    elem({
     classes: ['velocity'],
-    textContent: velocityText
+    textContent: velocityText,
    })
   )
  }
@@ -625,9 +627,9 @@ function attachMessage(
   dataset: includeTourAttributes
    ? {
       tour:
-       'The message score. The score continues to increase or decrease unless the movement is stopped.'
+       'The message score. The score continues to increase or decrease unless the movement is stopped.',
      }
-   : undefined
+   : undefined,
  })
  renderScore()
  const messageLink = `/#/${encodeURIComponent(
@@ -636,7 +638,9 @@ function attachMessage(
  const dateContainer = elem({
   attributes: {
    href: messageLink,
-   title: new Date(message.data.seen).toString()
+   title: new Date(
+    message.data.seen
+   ).toString(),
   },
   classes: ['news-date'],
   events: {
@@ -645,24 +649,24 @@ function attachMessage(
      getUrlData()
     focusOnMessage = message
     route()
-   }
+   },
   },
   tagName: 'a',
   textContent: localDateTime(
    new Date(message.data.seen)
-  )
+  ),
  })
  const articleToolButtons = elem({
   classes: ['article-tool-buttons'],
-  children: [agreeButton, disagreeButton]
+  children: [agreeButton, disagreeButton],
  })
  const articleTools = elem({
   classes: ['article-tools'],
-  children: [score, articleToolButtons]
+  children: [score, articleToolButtons],
  })
  articleTools.appendChild(
   elem({
-   style: { flexGrow: 1 }
+   style: { flexGrow: 1 },
   })
  )
  if (includeReactions) {
@@ -674,23 +678,23 @@ function attachMessage(
  }
  const article = elem({
   children: [content, articleTools],
-  tagName: 'article'
+  tagName: 'article',
  })
  const newsItem = elem({
   classes: ['news'],
-  children: [article, dateContainer]
+  children: [article, dateContainer],
  })
  if (includeFooter) {
   function footerLinkSeparator() {
    messageFooter.appendChild(
     elem({
      tagName: 'span',
-     textContent: ' • '
+     textContent: ' • ',
     })
    )
   }
   const messageFooter = elem({
-   classes: ['message-footer']
+   classes: ['message-footer'],
   })
   newsItem.appendChild(messageFooter)
   const labelsElement =
@@ -711,22 +715,22 @@ function attachMessage(
    )
    const repliesLink = elem({
     attributes: {
-     href
+     href,
     },
     dataset: includeTourAttributes
      ? {
         tour:
-         'View the message, including any replies. You can also reply to the message from here.'
+         'View the message, including any replies. You can also reply to the message from here.',
        }
      : undefined,
     tagName: 'a',
-    textContent: 'View message'
+    textContent: 'View message',
    })
    messageFooter.appendChild(repliesLink)
    footerLinkSeparator()
    const copyMessageLink = elem({
     attributes: {
-     href
+     href,
     },
     events: {
      click(e) {
@@ -740,16 +744,16 @@ function attachMessage(
        copyMessageLink.textContent =
         'copy message'
       }, 2e3)
-     }
+     },
     },
     tagName: 'a',
-    textContent: 'copy message'
+    textContent: 'copy message',
    })
    messageFooter.appendChild(copyMessageLink)
    footerLinkSeparator()
    const labelMessageLink = elem({
     attributes: {
-     href
+     href,
     },
     events: {
      async click(e) {
@@ -768,10 +772,10 @@ function attachMessage(
        labelMessageLink.textContent =
         'label message'
       }, 2e3)
-     }
+     },
     },
     tagName: 'a',
-    textContent: 'label message'
+    textContent: 'label message',
    })
    messageFooter.appendChild(labelMessageLink)
    if (sendToRealm) {
@@ -782,12 +786,12 @@ function attachMessage(
     const sendToLabel = `send to ${label}`
     const sendToLink = elem({
      attributes: {
-      href
+      href,
      },
      dataset: includeTourAttributes
       ? {
          tour:
-          'Copy this message into another realm.'
+          'Copy this message into another realm.',
         }
       : undefined,
      events: {
@@ -804,26 +808,26 @@ function attachMessage(
         )
        )
        sendToLink.textContent = `✔ sent to ${label}`
-      }
+      },
      },
      tagName: 'a',
-     textContent: sendToLabel
+     textContent: sendToLabel,
     })
     messageFooter.appendChild(
      elem({
       tagName: 'span',
-      textContent: ' • '
+      textContent: ' • ',
      })
     )
     messageFooter.appendChild(sendToLink)
    }
    const copyToReplyLink = elem({
     attributes: {
-     href
+     href,
     },
     dataset: includeTourAttributes
      ? {
-        tour: 'Copy message content to reply.'
+        tour: 'Copy message content to reply.',
        }
      : undefined,
     events: {
@@ -834,17 +838,17 @@ function attachMessage(
       composeTextarea.selectionStart = 0
       composeTextarea.selectionEnd =
        composeTextarea.value.length
-     }
+     },
     },
     tagName: 'a',
     textContent: copyToReply
      ? 'reply with message'
-     : 'new with message'
+     : 'new with message',
    })
    messageFooter.appendChild(
     elem({
      tagName: 'span',
-     textContent: ' • '
+     textContent: ' • ',
     })
    )
    messageFooter.appendChild(copyToReplyLink)
@@ -852,7 +856,7 @@ function attachMessage(
    footerLinkSeparator()
    const copyViewMessageLink = elem({
     attributes: {
-     href
+     href,
     },
     events: {
      click(e) {
@@ -866,15 +870,15 @@ function attachMessage(
        copyViewMessageLink.textContent =
         'copy link'
       }, 2e3)
-     }
+     },
     },
     dataset: includeTourAttributes
      ? {
-        tour: 'Copy a link to this message.'
+        tour: 'Copy a link to this message.',
        }
      : undefined,
     tagName: 'a',
-    textContent: 'copy link'
+    textContent: 'copy link',
    })
    messageFooter.appendChild(
     copyViewMessageLink
@@ -886,12 +890,12 @@ function attachMessage(
     const unsendLink = elem({
      attributes: {
       href,
-      title: unsendInfo
+      title: unsendInfo,
      },
      classes: ['unsend'],
      dataset: includeTourAttributes
       ? {
-         tour: unsendInfo
+         tour: unsendInfo,
         }
       : undefined,
      events: {
@@ -925,10 +929,10 @@ function attachMessage(
         setTimeout(r, 1000)
        )
        newsItem.remove()
-      }
+      },
      },
      tagName: 'a',
-     textContent: 'unsend'
+     textContent: 'unsend',
     })
     footerLinkSeparator()
     messageFooter.appendChild(unsendLink)
@@ -944,7 +948,7 @@ function attachMessage(
   setTimeout(function () {
    article.scrollIntoView({
     behavior: 'smooth',
-    block: 'nearest'
+    block: 'nearest',
    })
   }, 50)
   article.classList.add('highlight')
@@ -987,8 +991,8 @@ function displayAutocompleteChannels(
      () => channelInput.focus(),
      250
     )
-   }
-  }
+   },
+  },
  })
  let isOpen = false
  const historyElement = elem({
@@ -998,11 +1002,11 @@ function displayAutocompleteChannels(
     events: {
      mousedown() {
       cancelChannelInput()
-     }
-    }
+     },
+    },
    }),
-   channelHistoryListElement
-  ]
+   channelHistoryListElement,
+  ],
  })
  function close() {
   closeTimeout = setTimeout(closeNow, 250)
@@ -1020,7 +1024,7 @@ function displayAutocompleteChannels(
   const terms = text.toLowerCase().split(/\s+/)
   for (const [
    historyChannel,
-   historyEntry
+   historyEntry,
   ] of historyEntries) {
    historyEntry.style.display = terms.every(
     (term) => historyChannel.includes(term)
@@ -1048,7 +1052,7 @@ function displayAutocompleteChannels(
    const historyEntry = elem({
     tagName: 'a',
     attributes: {
-     href: `#/${encodeURIComponent(channel)}`
+     href: `#/${encodeURIComponent(channel)}`,
     },
     children: [
      elem({
@@ -1056,7 +1060,7 @@ function displayAutocompleteChannels(
       textContent:
        channel === ''
         ? HOME_CHANNEL_ICON
-        : channel
+        : channel,
      }),
      elem({
       classes: ['remove'],
@@ -1070,17 +1074,17 @@ function displayAutocompleteChannels(
         const history = readChannelHistory()
         delete history[channel]
         writeChannelHistory(history)
-       }
-      }
-     })
-    ]
+       },
+      },
+     }),
+    ],
    })
    channelHistoryListElement.appendChild(
     historyEntry
    )
    historyEntries.push([
     channel.toLowerCase(),
-    historyEntry
+    historyEntry,
    ])
   }
   lastAttachedChannels?.forEach?.(
@@ -1088,7 +1092,7 @@ function displayAutocompleteChannels(
     const historyEntry = elem({
      tagName: 'a',
      attributes: {
-      href: `#/${encodeURIComponent(channel)}`
+      href: `#/${encodeURIComponent(channel)}`,
      },
      classes: ['small'],
      children: [
@@ -1097,21 +1101,21 @@ function displayAutocompleteChannels(
        textContent:
         channel === ''
          ? HOME_CHANNEL_ICON
-         : channel
+         : channel,
       }),
       elem({
        classes: ['score'],
        tagName: 'span',
-       textContent: niceNumber(score)
-      })
-     ]
+       textContent: niceNumber(score),
+      }),
+     ],
     })
     channelHistoryListElement.appendChild(
      historyEntry
     )
     historyEntries.push([
      channel.toLowerCase(),
-     historyEntry
+     historyEntry,
     ])
    }
   )
@@ -1132,7 +1136,7 @@ function displayAutocompleteChannels(
   close,
   filter,
   open,
-  visit
+  visit,
  }
 }
 
@@ -1172,8 +1176,8 @@ function displayAutocompleteActivitySearch(
      () => filterInput.focus(),
      250
     )
-   }
-  }
+   },
+  },
  })
  let isOpen = false
  const historyElement = elem({
@@ -1183,11 +1187,11 @@ function displayAutocompleteActivitySearch(
     events: {
      mousedown() {
       cancelFilterInput()
-     }
-    }
+     },
+    },
    }),
-   filterHistoryListElement
-  ]
+   filterHistoryListElement,
+  ],
  })
  function close() {
   closeTimeout = setTimeout(closeNow, 250)
@@ -1205,7 +1209,7 @@ function displayAutocompleteActivitySearch(
   const terms = text.toLowerCase().split(/\s+/)
   for (const [
    historyChannel,
-   historyEntry
+   historyEntry,
   ] of historyEntries) {
    historyEntry.style.display = terms.every(
     (term) => historyChannel.includes(term)
@@ -1235,12 +1239,12 @@ function displayAutocompleteActivitySearch(
       e.stopPropagation()
       e.preventDefault()
       applyFilter(filter)
-     }
+     },
     },
     children: [
      elem({
       tagName: 'span',
-      textContent: filter
+      textContent: filter,
      }),
      elem({
       classes: ['remove'],
@@ -1257,17 +1261,17 @@ function displayAutocompleteActivitySearch(
         const history = readFilterHistory()
         delete history[filter]
         writeFilterHistory(history)
-       }
-      }
-     })
-    ]
+       },
+      },
+     }),
+    ],
    })
    filterHistoryListElement.appendChild(
     historyEntry
    )
    historyEntries.push([
     filter.toLowerCase(),
-    historyEntry
+    historyEntry,
    ])
   }
   document.body.appendChild(historyElement)
@@ -1290,7 +1294,7 @@ function displayAutocompleteActivitySearch(
   close,
   filter,
   open,
-  visit
+  visit,
  }
 }
 
@@ -1298,14 +1302,14 @@ function displayActivity() {
  const element = elem({
   attributes: {
    'data-tour':
-    'Read the news, all recent messages and replies in this realm.'
+    'Read the news, all recent messages and replies in this realm.',
   },
-  classes: ['activity-container-inner']
+  classes: ['activity-container-inner'],
  })
 
  const outerElement = elem({
   classes: ['activity-container'],
-  children: [element]
+  children: [element],
  })
 
  let isVisible = false
@@ -1313,7 +1317,7 @@ function displayActivity() {
  const endOfNewsMessageElement = elem({
   tagName: 'p',
   textContent: 'End of news.',
-  classes: ['text-message']
+  classes: ['text-message'],
  })
 
  function endOfNews() {
@@ -1439,7 +1443,7 @@ function displayActivity() {
    channel,
    element,
    message,
-   parentMessage
+   parentMessage,
   } of lastMessages) {
    const messageIncludesAllTerms =
     filterTerms.length === 0
@@ -1462,7 +1466,7 @@ function displayActivity() {
   show,
   hide,
   toggle,
-  loadMore
+  loadMore,
  }
 }
 
@@ -1514,7 +1518,7 @@ function attachNewsMessage(
    return elem({
     tagName: 'p',
     textContent:
-     'Error: Unknown reaction channel'
+     'Error: Unknown reaction channel',
    })
   }
 
@@ -1526,7 +1530,7 @@ function attachNewsMessage(
 
   const reactionChannelContainer = elem({
    attributes: {
-    href: messageLink
+    href: messageLink,
    },
    classes: ['news-channel'],
    events: {
@@ -1537,19 +1541,19 @@ function attachNewsMessage(
      if (reactionChannel === currentChannel) {
       route()
      }
-    }
+    },
    },
    tagName: 'a',
    textContent: `#${
     reactionChannel === ''
      ? HOME_CHANNEL_ICON
      : reactionChannel
-   }`
+   }`,
   })
   const reactionContent = elem({
    children: [reactionChannelContainer],
    classes: ['reply'],
-   tagName: 'blockquote'
+   tagName: 'blockquote',
   })
   addTextBlocks(
    reactionContent,
@@ -1570,7 +1574,7 @@ function attachNewsMessage(
   const dateContainer = elem({
    attributes: {
     href: messageLink,
-    title: new Date(seen).toString()
+    title: new Date(seen).toString(),
    },
    classes: ['news-date'],
    events: {
@@ -1581,18 +1585,18 @@ function attachNewsMessage(
      if (reactionChannel === currentChannel) {
       route()
      }
-    }
+    },
    },
    tagName: 'a',
-   textContent: localDateTime(new Date(seen))
+   textContent: localDateTime(new Date(seen)),
   })
   const article = elem({
    children: [content, reactionContent],
-   tagName: 'article'
+   tagName: 'article',
   })
   const newsItem = elem({
    classes: ['news', 'reaction-message'],
-   children: [article, dateContainer]
+   children: [article, dateContainer],
   })
   container.appendChild(newsItem)
   return {
@@ -1600,7 +1604,7 @@ function attachNewsMessage(
    element: newsItem,
    message: message.toLowerCase(),
    reactionMessage:
-    reactionMessage.toLowerCase()
+    reactionMessage.toLowerCase(),
   }
  }
  const isReply = channel.startsWith('replies@')
@@ -1614,7 +1618,7 @@ function attachNewsMessage(
   )}/${btoa(encodeURIComponent(parentMessage))}`
   const parentChannelContainer = elem({
    attributes: {
-    href: messageLink
+    href: messageLink,
    },
    classes: ['news-channel'],
    events: {
@@ -1625,19 +1629,19 @@ function attachNewsMessage(
      if (parentChannel === currentChannel) {
       route()
      }
-    }
+    },
    },
    tagName: 'a',
    textContent: `#${
     parentChannel === ''
      ? HOME_CHANNEL_ICON
      : parentChannel
-   }`
+   }`,
   })
   const parentContent = elem({
    children: [parentChannelContainer],
    classes: ['reply'],
-   tagName: 'blockquote'
+   tagName: 'blockquote',
   })
   addTextBlocks(parentContent, parentMessage)
   addYouTubeEmbed(parentContent, parentMessage)
@@ -1646,7 +1650,7 @@ function attachNewsMessage(
   const dateContainer = elem({
    attributes: {
     href: messageLink,
-    title: new Date(seen).toString()
+    title: new Date(seen).toString(),
    },
    classes: ['news-date'],
    events: {
@@ -1657,31 +1661,31 @@ function attachNewsMessage(
      if (parentChannel === currentChannel) {
       route()
      }
-    }
+    },
    },
    tagName: 'a',
-   textContent: localDateTime(new Date(seen))
+   textContent: localDateTime(new Date(seen)),
   })
   const article = elem({
    children: [content, parentContent],
-   tagName: 'article'
+   tagName: 'article',
   })
   const newsItem = elem({
    classes: ['news'],
-   children: [article, dateContainer]
+   children: [article, dateContainer],
   })
   container.appendChild(newsItem)
   return {
    channel: '#' + parentChannel.toLowerCase(),
    element: newsItem,
    message: message.toLowerCase(),
-   parentMessage: parentMessage.toLowerCase()
+   parentMessage: parentMessage.toLowerCase(),
   }
  } else {
   const dateContainer = elem({
    attributes: {
     href: `#/${encodeURIComponent(channel)}`,
-    title: new Date(seen).toString()
+    title: new Date(seen).toString(),
    },
    classes: ['news-date'],
    events: {
@@ -1692,14 +1696,14 @@ function attachNewsMessage(
      if (channel === currentChannel) {
       route()
      }
-    }
+    },
    },
    tagName: 'a',
-   textContent: localDateTime(new Date(seen))
+   textContent: localDateTime(new Date(seen)),
   })
   const channelContainer = elem({
    attributes: {
-    href: `#/${encodeURIComponent(channel)}`
+    href: `#/${encodeURIComponent(channel)}`,
    },
    classes: ['news-channel'],
    events: {
@@ -1710,30 +1714,30 @@ function attachNewsMessage(
      if (channel === currentChannel) {
       route()
      }
-    }
+    },
    },
    tagName: 'a',
    textContent: `#${
     channel === '' ? HOME_CHANNEL_ICON : channel
-   }`
+   }`,
   })
   const article = elem({
    children: [
     dateContainer,
     channelContainer,
-    content
+    content,
    ],
-   tagName: 'article'
+   tagName: 'article',
   })
   const newsItem = elem({
    classes: ['news'],
-   children: [article, dateContainer]
+   children: [article, dateContainer],
   })
   container.appendChild(newsItem)
   return {
    channel: '#' + channel.toLowerCase(),
    element: newsItem,
-   message: message.toLowerCase()
+   message: message.toLowerCase(),
   }
  }
 }

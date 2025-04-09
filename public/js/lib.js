@@ -325,7 +325,7 @@ function addImageEmbed(container, text) {
     new URLSearchParams({
      url: urlMatch[0],
      width: 720,
-     height: 720
+     height: 720,
     }).toString()
 
  addImageByUrl(container, imgSrc)
@@ -340,7 +340,7 @@ function captureScrollPosition() {
  document.body.scrollTo({
   behavior: 'instant',
   left: 0,
-  top: 0
+  top: 0,
  })
  document.body.style.overflow = 'hidden'
 }
@@ -353,7 +353,7 @@ function restoreScrollPosition() {
   document.body.scrollTo({
    behavior: 'instant',
    left: 0,
-   top: scrollPosition
+   top: scrollPosition,
   })
  }
  document.body.style.overflow = 'auto'
@@ -371,10 +371,10 @@ function addImageByUrl(
    elem({
     attributes: {
      loading: 'lazy',
-     src: imgSrc
+     src: imgSrc,
     },
-    tagName: 'img'
-   })
+    tagName: 'img',
+   }),
   ],
   events: {
    click() {
@@ -396,8 +396,8 @@ function addImageByUrl(
      expandedElement = imageContainer
      document.body.appendChild(imageContainer)
     }
-   }
-  }
+   },
+  },
  })
  container.appendChild(imageContainer)
  container.appendChild(
@@ -444,7 +444,7 @@ async function addOpenGraphLink(
   const tags = await tagResponse.json()
   if (tags.image) {
    addImageByUrl(container, tags.image, [
-    'image-article'
+    'image-article',
    ])
   }
   if (tags.title) {
@@ -454,7 +454,7 @@ async function addOpenGraphLink(
   }
   if (tags.description) {
    const descriptionElem = elem({
-    tagName: 'p'
+    tagName: 'p',
    })
    addTextWithCodeBlocks(
     descriptionElem,
@@ -469,7 +469,7 @@ async function addOpenGraphLink(
    elem({
     attributes: {
      href: tags.url ?? urlMatch[0],
-     target: '_blank'
+     target: '_blank',
     },
     classes: ['external-link'],
     tagName: 'a',
@@ -478,7 +478,7 @@ async function addOpenGraphLink(
       ? siteName
       : `Open ${
          tags.type ?? 'page'
-        } on ${siteName}`
+        } on ${siteName}`,
    })
   )
  } catch (e) {
@@ -505,21 +505,21 @@ async function addMessageReplies(
   children: [
    elem({
     attributes: {
-     title: 'Toggle replies'
+     title: 'Toggle replies',
     },
     events: {
      click() {
       replyContainer.classList.toggle(
        'expanded'
       )
-     }
+     },
     },
     tagName: 'h4',
     textContent: `${replies.count ?? 'No'} ${
      replies.count === 1 ? 'Reply' : 'Replies'
-    }`
-   })
-  ]
+    }`,
+   }),
+  ],
  })
 
  const formattedMessageReplies =
@@ -559,12 +559,12 @@ async function addMessageReplies(
       channel
      )}/${btoa(
       encodeURIComponent(message.text)
-     )}`
+     )}`,
     },
     tagName: 'a',
     textContent: `View ${additionalReplies.toString(
      10
-    )} more ${additionalRepliesText}`
+    )} more ${additionalRepliesText}`,
    })
   )
  }
@@ -600,7 +600,7 @@ function elem({
  events,
  style,
  tagName = 'div',
- textContent
+ textContent,
 } = {}) {
  const e = document.createElement(tagName)
  if (attributes) {
@@ -684,7 +684,7 @@ function getDateTime(hoursSince2024) {
   resultDate.getFullYear(),
   resultDate.getMonth(),
   resultDate.getDate() - 1,
-  resultDate.getHours()
+  resultDate.getHours(),
  ]
 }
 
@@ -740,41 +740,41 @@ async function politeAlert(
       children: requiredConsent.map((text) => {
        const checkbox = elem({
         attributes: {
-         type: 'checkbox'
+         type: 'checkbox',
         },
         events: {
          click() {
           if (checkbox.checked) {
            label.classList.remove('required')
           }
-         }
+         },
         },
-        tagName: 'input'
+        tagName: 'input',
        })
        const label = elem({
         children: [
          checkbox,
          elem({
           tagName: 'div',
-          textContent: text
-         })
+          textContent: text,
+         }),
         ],
-        tagName: 'label'
+        tagName: 'label',
        })
        return label
-      })
-     })
+      }),
+     }),
     ]
   : []
  const agreed = await new Promise((agree) => {
   const alertContainer = elem({
    classes: ['alert-container'],
    attributes: {
-    tabIndex: 0
+    tabIndex: 0,
    },
    children: [
     elem({
-     textContent: message
+     textContent: message,
     }),
     ...consentForm,
     elem({
@@ -793,10 +793,10 @@ async function politeAlert(
         }
        }
        agree(true)
-      }
+      },
      },
      tagName: 'button',
-     textContent: actionText ?? 'OK'
+     textContent: actionText ?? 'OK',
     }),
     ...(allowCancel
      ? [
@@ -804,17 +804,17 @@ async function politeAlert(
          events: {
           click() {
            agree(false)
-          }
+          },
          },
          tagName: 'button',
          textContent:
           typeof allowCancel === 'string'
            ? allowCancel
-           : 'Cancel'
-        })
+           : 'Cancel',
+        }),
        ]
-     : [])
-   ]
+     : []),
+   ],
   })
   alertBox = elem({
    classes: ['alert-shade'],
@@ -829,9 +829,9 @@ async function politeAlert(
       return
      }
      alertContainer.focus()
-    }
+    },
    },
-   children: [alertContainer]
+   children: [alertContainer],
   })
   document.body.appendChild(alertBox)
  })
@@ -848,26 +848,26 @@ function dialog(...children) {
   elem({
    children: children.filter(
     (v) => typeof v !== 'boolean'
-   )
-  })
+   ),
+  }),
  ]
  if (cancelButton) {
   compChildren.push(
    elem({
     events: {
-     click: close
+     click: close,
     },
     tagName: 'button',
-    textContent: 'Cancel'
+    textContent: 'Cancel',
    })
   )
  }
  const alertContainer = elem({
   classes: ['alert-container'],
   attributes: {
-   tabIndex: 0
+   tabIndex: 0,
   },
-  children: compChildren
+  children: compChildren,
  })
  const dialogBox = elem({
   classes: ['alert-shade'],
@@ -882,15 +882,15 @@ function dialog(...children) {
      return
     }
     alertContainer.focus()
-   }
+   },
   },
-  children: [alertContainer]
+  children: [alertContainer],
  })
  document.body.appendChild(dialogBox)
 
  dialogBox.scrollIntoView({
   behavior: 'instant',
-  block: 'center'
+  block: 'center',
  })
 
  return { close }
@@ -927,7 +927,7 @@ function getUrlData() {
   control,
   channel: channel ?? '',
   messageChannel,
-  message
+  message,
  }
 }
 
@@ -997,11 +997,11 @@ async function networkMessageSend(
  const body = JSON.stringify({
   channel,
   message,
-  velocity
+  velocity,
  })
  const headers = {
   'Content-Length': body.length,
-  'Content-Type': 'application/json'
+  'Content-Type': 'application/json',
  }
  const activeSession = sessionId
   ? sessionId === PUBLIC_SESSION_ID
@@ -1026,7 +1026,7 @@ async function networkMessageSend(
   {
    method: 'POST',
    headers,
-   body
+   body,
   }
  )
 
@@ -1036,7 +1036,7 @@ async function networkMessageSend(
   window.h = error
   console.error({
    error,
-   url: `${networkRootUrl(env)}/send`
+   url: `${networkRootUrl(env)}/send`,
   })
   alert(error)
   return false
@@ -1051,11 +1051,11 @@ async function networkMessageUnsend(
 ) {
  const body = JSON.stringify({
   channel,
-  message
+  message,
  })
  const headers = {
   'Content-Length': body.length,
-  'Content-Type': 'application/json'
+  'Content-Type': 'application/json',
  }
  const activeSession = getActiveSession()
  if (activeSession) {
@@ -1076,7 +1076,7 @@ async function networkMessageUnsend(
   {
    method: 'POST',
    headers,
-   body
+   body,
   }
  )
 
@@ -1233,9 +1233,9 @@ function createSession() {
  const sendEmailButton = elem({
   attributes: {
    type: 'submit',
-   value: 'Verify'
+   value: 'Verify',
   },
-  tagName: 'input'
+  tagName: 'input',
  })
  function closeModal() {
   loginDialog.close()
@@ -1243,19 +1243,19 @@ function createSession() {
  const loginDialog = dialog(
   elem({
    tagName: 'h2',
-   textContent: 'Sign in'
+   textContent: 'Sign in',
   }),
   elem({
    tagName: 'h4',
-   textContent: 'Verify your kv server:'
+   textContent: 'Verify your kv server:',
   }),
   elem({
    tagName: 'p',
-   textContent: `➊ Enter compatible kv server url and verify ownership`
+   textContent: `➊ Enter compatible kv server url and verify ownership`,
   }),
   elem({
    tagName: 'h5',
-   textContent: `KV Server Specification`
+   textContent: `KV Server Specification`,
   }),
   elem({
    tagName: 'code',
@@ -1264,17 +1264,17 @@ Read a value:   GET <url>?key=<key>
 Delete a value: DELETE <url>?key=<key>
 Set a value:    POST <url>?key=<key>
                 with value as request body
-`.trim()
+`.trim(),
   }),
   elem({
    tagName: 'p',
    textContent: `➋ Set the key "code" to ${JSON.stringify(
     code
-   )}`
+   )}`,
   }),
   elem({
    tagName: 'p',
-   textContent: `➌ Press Verify`
+   textContent: `➌ Press Verify`,
   }),
   elem({
    tagName: 'form',
@@ -1285,11 +1285,11 @@ Set a value:    POST <url>?key=<key>
       name: 'url',
       placeholder: 'Enter kv server URL',
       required: true,
-      type: 'text'
+      type: 'text',
      },
-     tagName: 'input'
+     tagName: 'input',
     }),
-    sendEmailButton
+    sendEmailButton,
    ],
    events: {
     async submit(e) {
@@ -1298,7 +1298,7 @@ Set a value:    POST <url>?key=<key>
       waitingMessage = elem({
        tagName: 'p',
        textContent:
-        'Please wait, checking kv server...'
+        'Please wait, checking kv server...',
       })
      }
      try {
@@ -1374,8 +1374,8 @@ Set a value:    POST <url>?key=<key>
          async click(e) {
           e.preventDefault()
           reCheckNow()
-         }
-        }
+         },
+        },
        })
        e.target.appendChild(continueButton)
       }
@@ -1390,8 +1390,8 @@ Set a value:    POST <url>?key=<key>
       e.target.url.disabled = false
       sendEmailButton.disabled = false
      }
-    }
-   }
+    },
+   },
   })
  )
 }
@@ -1401,13 +1401,13 @@ async function createSessionWithKVUrl(
  expectedCode
 ) {
  console.log({
-  message: 'now checking url: ' + url
+  message: 'now checking url: ' + url,
  })
  const response = await fetch(url)
  if (!response.ok) {
   return {
    success: false,
-   error: `Got response code ${response.status}} ${response.statusText}`
+   error: `Got response code ${response.status}} ${response.statusText}`,
   }
  }
  const responseText = await response.text()
@@ -1416,14 +1416,14 @@ async function createSessionWithKVUrl(
    success: false,
    error: `Expected ${JSON.stringify(
     responseText
-   )} to be ${JSON.stringify(expectedCode)}`
+   )} to be ${JSON.stringify(expectedCode)}`,
   }
  }
  const sessionId = randomId()
  const newSession = {
   id: sessionId,
   url,
-  hash: location.hash
+  hash: location.hash,
  }
  writeSessions([...listSessions(), newSession])
  const createdAppAccount =
@@ -1432,7 +1432,7 @@ async function createSessionWithKVUrl(
  createdAppAccount.switchTo()
  return {
   success: true,
-  data: newSession
+  data: newSession,
  }
 }
 
@@ -1466,7 +1466,7 @@ async function registerSession(
 
 function scrollToTop(top = 0) {
  document.body.scrollTo(0, top, {
-  behavior: 'instant'
+  behavior: 'instant',
  })
  document.body.classList.remove('scroll-up')
  document.body.classList.add('scroll-zero')
@@ -1491,7 +1491,7 @@ const themeNames = [
  'purple',
  'red',
  'white',
- 'yellow'
+ 'yellow',
 ]
 
 const setTheme = (themeName) => {

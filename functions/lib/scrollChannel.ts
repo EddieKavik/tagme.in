@@ -33,7 +33,7 @@ export function scrollChannel(
   newsChunkId: string
   newsChunkById(id: number): string
  },
- getLatestNewsChunkId: () => Promise<number>,
+ getLatestNewsChunkId: () => Promise<number>
 ) {
  const timestamp = Date.now()
  const hour = getHourNumber()
@@ -58,7 +58,7 @@ export function scrollChannel(
    const newChunkId = chunkId + 1
    await kv.set(
     newsKey.newsChunkId,
-    newChunkId.toString(36),
+    newChunkId.toString(36)
    )
    const newChunkKey =
     newsKey.newsChunkById(newChunkId)
@@ -110,7 +110,7 @@ export function scrollChannel(
      : `scroll.channel.rank.hour#${hour}`,
   }
   async function storeChannelRank(
-   channelScore: number,
+   channelScore: number
   ) {
    const existingChannelRankString =
     await kv.get(key.channelRank)
@@ -130,20 +130,20 @@ export function scrollChannel(
     existingChannelRank = Object.fromEntries(
      Object.entries(existingChannelRank)
       .sort((a, b) => b[1] - a[1])
-      .slice(0, RANKED_HISTORY_ITEM_COUNT),
+      .slice(0, RANKED_HISTORY_ITEM_COUNT)
     )
    }
    const newChannelRankString = JSON.stringify(
-    existingChannelRank,
+    existingChannelRank
    )
    await Promise.all([
     kv.set(
      key.channelRank,
-     newChannelRankString,
+     newChannelRankString
     ),
     kv.set(
      key.channelRankHour,
-     newChannelRankString,
+     newChannelRankString
     ),
    ])
   }
@@ -158,23 +158,23 @@ export function scrollChannel(
    if (channelName in existingChannelRank) {
     delete existingChannelRank[channelName]
     const newChannelRankString = JSON.stringify(
-     existingChannelRank,
+     existingChannelRank
     )
     await Promise.all([
      kv.set(
       key.channelRank,
-      newChannelRankString,
+      newChannelRankString
      ),
      kv.set(
       key.channelRankHour,
-      newChannelRankString,
+      newChannelRankString
      ),
     ])
    }
   }
   async function activeKH() {
    const existingKHString = await kv.get(
-    key.channelActivityKH,
+    key.channelActivityKH
    )
    const existingKH: number[] = existingKHString
     ? JSON.parse(existingKHString)
@@ -183,13 +183,13 @@ export function scrollChannel(
     existingKH.push(hour)
     await kv.set(
      key.channelActivityKH,
-     JSON.stringify(existingKH),
+     JSON.stringify(existingKH)
     )
    }
   }
   async function activeMH() {
    const existingMHString = await kv.get(
-    key.channelActivityMH,
+    key.channelActivityMH
    )
    const existingMH: number[] = existingMHString
     ? JSON.parse(existingMHString)
@@ -198,7 +198,7 @@ export function scrollChannel(
     existingMH.push(kHour)
     await kv.set(
      key.channelActivityMH,
-     JSON.stringify(existingMH),
+     JSON.stringify(existingMH)
     )
    }
   }
@@ -208,7 +208,7 @@ export function scrollChannel(
 
   async function publishMessageActivity(
    message: string,
-   seen: number,
+   seen: number
   ): Promise<number> {
    const [chunkId, chunkKey, chunkData] =
     await getPublishChunk()
@@ -221,13 +221,13 @@ export function scrollChannel(
    try {
     await kv.set(
      chunkKey,
-     JSON.stringify(chunkData),
+     JSON.stringify(chunkData)
     )
    } catch (error) {
     throw new Error(
      `Error setting chunk data: ${error} ; chunkId: ${chunkId} ; chunkKey: ${chunkKey} ; chunkData: ${JSON.stringify(
-      chunkData,
-     )}`,
+      chunkData
+     )}`
     )
    }
    return chunkId
@@ -239,7 +239,7 @@ export function scrollChannel(
 
   async function unpublishMessageActivity(
    message: string,
-   chunkId: number,
+   chunkId: number
   ) {
    const chunkKey =
     newsKey.newsChunkById(chunkId)
@@ -252,17 +252,17 @@ export function scrollChannel(
    ).filter(
     // remove the message
     (m: Record<string, any>) =>
-     m.message !== message,
+     m.message !== message
    )
    await kv.set(
     chunkKey,
-    JSON.stringify(chunkData),
+    JSON.stringify(chunkData)
    )
   }
 
   async function rankMessage(
    message: string,
-   messageData: MessageData,
+   messageData: MessageData
   ) {
    const existingChannelRankString =
     await kv.get(key.channelMessages)
@@ -282,9 +282,9 @@ export function scrollChannel(
     channelMessageRank = Object.fromEntries(
      Object.entries(channelMessageRank)
       .sort(
-       (a, b) => b[1].position - a[1].position,
+       (a, b) => b[1].position - a[1].position
       )
-      .slice(0, RANKED_HISTORY_ITEM_COUNT),
+      .slice(0, RANKED_HISTORY_ITEM_COUNT)
     )
    }
 
@@ -292,7 +292,7 @@ export function scrollChannel(
     JSON.stringify(channelMessageRank)
 
    const channelScore = Object.values(
-    channelMessageRank,
+    channelMessageRank
    ).reduce(
     (a: number, b) =>
      a +
@@ -301,19 +301,19 @@ export function scrollChannel(
       b.position +
        ((timestamp - b.timestamp) *
         b.velocity) /
-        ONE_HOUR_MS,
+        ONE_HOUR_MS
      ),
-    0,
+    0
    )
 
    await Promise.all([
     kv.set(
      key.channelMessages,
-     newChannelMessageRankString,
+     newChannelMessageRankString
     ),
     kv.set(
      key.channelMessagesHour,
-     newChannelMessageRankString,
+     newChannelMessageRankString
     ),
     active(),
     storeChannelRank(channelScore),
@@ -321,7 +321,7 @@ export function scrollChannel(
   }
 
   async function unrankMessage(
-   message: string,
+   message: string
   ) {
    const existingChannelRankString =
     await kv.get(key.channelMessages)
@@ -337,7 +337,7 @@ export function scrollChannel(
     JSON.stringify(channelMessageRank)
 
    const channelScore = Object.values(
-    channelMessageRank,
+    channelMessageRank
    ).reduce(
     (a: number, b) =>
      a +
@@ -346,19 +346,19 @@ export function scrollChannel(
       b.position +
        ((timestamp - b.timestamp) *
         b.velocity) /
-        ONE_HOUR_MS,
+        ONE_HOUR_MS
      ),
-    0,
+    0
    )
 
    await Promise.all([
     kv.set(
      key.channelMessages,
-     newChannelMessageRankString,
+     newChannelMessageRankString
     ),
     kv.set(
      key.channelMessagesHour,
-     newChannelMessageRankString,
+     newChannelMessageRankString
     ),
     active(),
     storeChannelRank(channelScore),
@@ -371,7 +371,7 @@ export function scrollChannel(
     messagePosition: `scroll.channel.message:${channelId}#${messageId}`,
    }
    const messageDataString = await kv.get(
-    key.messagePosition,
+    key.messagePosition
    )
    const messageData =
     typeof messageDataString === 'string' &&
@@ -391,7 +391,7 @@ export function scrollChannel(
 
   async function send(
    message: string,
-   velocity: number,
+   velocity: number
   ) {
    const messageData = await getMessage(message)
    const timeDelta =
@@ -411,7 +411,7 @@ export function scrollChannel(
      top: [],
     },
     labels: convertLabels(
-     messageData.labels ?? {},
+     messageData.labels ?? {}
     ),
    }
    if (
@@ -420,7 +420,7 @@ export function scrollChannel(
     newMessageData.newsChunk =
      await publishMessageActivity(
       message,
-      newMessageData.seen,
+      newMessageData.seen
      )
    }
 
@@ -444,13 +444,13 @@ export function scrollChannel(
           velocity: messageData.velocity,
          },
         ]
-       },
-      ),
+       }
+      )
     )
    }
 
    async function updateParentMessageLabels(
-    message: string,
+    message: string
    ) {
     if (!channelName.startsWith('labels@')) {
      return
@@ -463,16 +463,16 @@ export function scrollChannel(
       .map(decodeURIComponent)
 
     const parentChannelId = encodeURIComponent(
-     parentChannel,
+     parentChannel
     )
     const parentMessageId = encodeURIComponent(
-     parentMessage,
+     parentMessage
     )
     const parentMessageData = await channel(
-     parentChannel,
+     parentChannel
     ).getMessage(parentMessage)
     const parentMessageLabels = await channel(
-     `labels@${parentChannelId}#${parentMessageId}`,
+     `labels@${parentChannelId}#${parentMessageId}`
     ).seek()
     // console.dir({
     //  channel: `labels@${parentChannelId}#${parentMessageId}`,
@@ -496,7 +496,7 @@ export function scrollChannel(
       top: [],
      },
      labels: convertLabels(
-      parentMessageLabels.messages,
+      parentMessageLabels.messages
      ),
     }
 
@@ -513,7 +513,7 @@ export function scrollChannel(
 
     await channel(parentChannel).rankMessage(
      parentMessage,
-     newParentMessageData,
+     newParentMessageData
     )
 
     // console.dir({
@@ -568,29 +568,29 @@ export function scrollChannel(
     } else {
      throw new Error(
       `Parent channel data not found: ${JSON.stringify(
-       parentChannel,
-      )}`,
+       parentChannel
+      )}`
      )
     }
 
     const parentMessageData = JSON.parse(
-     parentChannelDataString,
+     parentChannelDataString
     )
 
     const allRepliesKey = `scroll.channel.messages:${encodeURIComponent(
-     `replies@${parentChannelId}:${parentMessageId}`,
+     `replies@${parentChannelId}:${parentMessageId}`
     )}#now`
 
     const allReplies = await seekMessages(
-     allRepliesKey,
+     allRepliesKey
     )
 
     const top10Replies = Object.fromEntries(
      Object.entries(allReplies)
       .sort(
-       (a, b) => b[1].position - a[1].position,
+       (a, b) => b[1].position - a[1].position
       )
-      .slice(0, 10),
+      .slice(0, 10)
     )
 
     const updatedParentMessageData = {
@@ -606,7 +606,7 @@ export function scrollChannel(
 
     await kv.set(
      parentChannelNowKey,
-     JSON.stringify(updatedParentMessageData),
+     JSON.stringify(updatedParentMessageData)
     )
    }
    const messageId = encodeURIComponent(message)
@@ -616,14 +616,14 @@ export function scrollChannel(
    await Promise.all([
     kv.set(
      key2.messagePosition,
-     JSON.stringify(newMessageData),
+     JSON.stringify(newMessageData)
     ),
     rankMessage(message, newMessageData),
     updateParentMessageLabels(message),
    ])
 
    await new Promise((resolve) =>
-    setTimeout(resolve, 100),
+    setTimeout(resolve, 100)
    )
 
    await updateParentMessageReplies()
@@ -635,7 +635,7 @@ export function scrollChannel(
     messagePosition: `scroll.channel.message:${channelId}#${messageId}`,
    }
    const messageDataString = await kv.get(
-    key.messagePosition,
+    key.messagePosition
    )
    const messageData = messageDataString
     ? JSON.parse(messageDataString)
@@ -680,29 +680,29 @@ export function scrollChannel(
      } else {
       throw new Error(
        `Parent channel data not found: ${JSON.stringify(
-        parentChannel,
-       )}`,
+        parentChannel
+       )}`
       )
      }
 
      const parentMessageData = JSON.parse(
-      parentChannelDataString,
+      parentChannelDataString
      )
 
      const allRepliesKey = `scroll.channel.messages:${encodeURIComponent(
-      `replies@${parentChannelId}:${parentMessageId}`,
+      `replies@${parentChannelId}:${parentMessageId}`
      )}#now`
 
      const allReplies = await seekMessages(
-      allRepliesKey,
+      allRepliesKey
      )
 
      const top10Replies = Object.fromEntries(
       Object.entries(allReplies)
        .sort(
-        (a, b) => b[1].position - a[1].position,
+        (a, b) => b[1].position - a[1].position
        )
-       .slice(0, 10),
+       .slice(0, 10)
      )
 
      const updatedParentMessageData = {
@@ -718,7 +718,7 @@ export function scrollChannel(
 
      await kv.set(
       parentChannelNowKey,
-      JSON.stringify(updatedParentMessageData),
+      JSON.stringify(updatedParentMessageData)
      )
     }
 
@@ -730,14 +730,14 @@ export function scrollChannel(
       ? [
          unpublishMessageActivity(
           message,
-          messageData.newsChunk,
+          messageData.newsChunk
          ),
         ]
       : []),
     ])
 
     await new Promise((resolve) =>
-     setTimeout(resolve, 100),
+     setTimeout(resolve, 100)
     )
 
     await updateParentMessageReplies()
@@ -745,7 +745,7 @@ export function scrollChannel(
     return true
    } else {
     throw new Error(
-     `Message with score of ${MESSAGE_PERSIST_THRESHOLD} cannot be unsent. Please demote the message first.`,
+     `Message with score of ${MESSAGE_PERSIST_THRESHOLD} cannot be unsent. Please demote the message first.`
     )
    }
   }
@@ -754,7 +754,7 @@ export function scrollChannel(
    const messagesString = await kv.get(_key)
    return messagesString
     ? excludeOverlyNegativeMessages(
-       JSON.parse(messagesString),
+       JSON.parse(messagesString)
       )
     : {}
   }
@@ -780,14 +780,14 @@ export function scrollChannel(
         messageData.velocity) /
         ONE_HOUR_MS
       return score > MESSAGE_NEGATIVE_THRESHOLD
-     },
-    ),
+     }
+    )
    )
   }
 
   async function seekChannels() {
    const channelsString = await kv.get(
-    key.channelRank,
+    key.channelRank
    )
    return channelsString
     ? JSON.parse(channelsString)

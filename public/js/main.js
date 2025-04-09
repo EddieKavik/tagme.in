@@ -55,7 +55,7 @@ const composeTextarea = elem({
   'data-tour':
    'Compose your own message to send to the current channel.',
   maxlength: '175',
-  required: 'required'
+  required: 'required',
  },
  events: {
   blur() {
@@ -97,13 +97,13 @@ const composeTextarea = elem({
     },
     text
    )
-  }
+  },
  },
- tagName: 'textarea'
+ tagName: 'textarea',
 })
 
 const realmControlContainer = elem({
- classes: ['realm-control', 'mode-other']
+ classes: ['realm-control', 'mode-other'],
 })
 
 const compose = elem({
@@ -111,22 +111,22 @@ const compose = elem({
   composeTextarea,
   elem({
    attributes: {
-    title: 'Send message now'
+    title: 'Send message now',
    },
    children: [icon('plane')],
    classes: ['submit'],
    events: {
     mousedown(e) {
      e.preventDefault()
-    }
+    },
    },
-   tagName: 'button'
-  })
+   tagName: 'button',
+  }),
  ],
  classes: [
   'compose',
   'mode-main',
-  'send-consent-granted'
+  'send-consent-granted',
  ],
  events: {
   async submit(e) {
@@ -151,42 +151,42 @@ const compose = elem({
     document.body.focus()
     route()
    }
-  }
+  },
  },
- tagName: 'form'
+ tagName: 'form',
 })
 
 const messageContent = elem({
  attributes: {
-  'data-tour': 'General channel information.'
+  'data-tour': 'General channel information.',
  },
- classes: ['message-content', 'mode-main']
+ classes: ['message-content', 'mode-main'],
 })
 
 const mainContent = elem({
  attributes: {
-  'data-tour': 'Read the channel messages.'
+  'data-tour': 'Read the channel messages.',
  },
  classes: ['mode-main'],
- tagName: 'main'
+ tagName: 'main',
 })
 
 const consentPrompt = elem({
  attributes: {
   'data-tour':
-   'Read and accept the conditions for contributing your own messages.'
+   'Read and accept the conditions for contributing your own messages.',
  },
  classes: [
   'consent-prompt',
   'mode-main',
-  'send-consent-not-granted'
+  'send-consent-not-granted',
  ],
  events: {
-  click: gainConsent
+  click: gainConsent,
  },
  tagName: 'p',
  textContent:
-  'Tap here to learn about contributing to Tag Me In'
+  'Tap here to learn about contributing to Tag Me In',
 })
 
 const { body } = document
@@ -286,7 +286,7 @@ async function route() {
   channel,
   control,
   messageChannel,
-  message: messageText
+  message: messageText,
  } = getUrlData()
  autocompleteChannels.visit(channel)
  document.title = [channel, 'Tag Me In']
@@ -451,7 +451,7 @@ To get started, consider the following statements:`,
    [
     'I consent to having everything I type into Tag Me In be judged exactingly by artificial intelligence in support of creating a safe(r) space for animals on the internet.',
     'I welcome animal-human communication with open arms.',
-    'I would like to co-create a future where humans and animals coexist in peace and mutual respect.'
+    'I would like to co-create a future where humans and animals coexist in peace and mutual respect.',
    ],
    'Cancel'
   )
