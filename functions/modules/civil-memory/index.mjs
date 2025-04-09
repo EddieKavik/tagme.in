@@ -11,17 +11,17 @@ function keyCompression(kv) {
    description: JSON.stringify(settings),
    get: async (key) =>
     setupKv.get(
-     await compressKey(setupKv, key),
+     await compressKey(setupKv, key)
     ),
    set: async (key, value) =>
     setupKv.set(
      await compressKey(setupKv, key),
-     value,
+     value
     ),
    delete: async (key) =>
     setupKv.delete(
-     await compressKey(setupKv, key),
-    ),
+     await compressKey(setupKv, key)
+    )
   }
  }
 }
@@ -52,7 +52,7 @@ async function compressKey(kv, key) {
  lookupData[remainder] = compressedKey
  await kv.set(
   lookupKey,
-  JSON.stringify(lookupData),
+  JSON.stringify(lookupData)
  )
  return compressedKey
 }
@@ -60,5 +60,5 @@ async function compressKey(kv, key) {
 export const civilMemoryKV = {
  cloudflare: keyCompression(cloudflareKV),
  http: keyCompression(httpKV),
- volatile: keyCompression(volatileKV),
+ volatile: keyCompression(volatileKV)
 }

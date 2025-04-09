@@ -18,19 +18,19 @@ function displayAppAccounts() {
    icon('globe', 'sm'),
    elem({
     tagName: 'span',
-    textContent: 'Earth',
-   }),
+    textContent: 'Earth'
+   })
   ],
   events: {
    click() {
     globalRealmTab.scrollIntoView({
      behavior: 'smooth',
-     inline: 'nearest',
+     inline: 'nearest'
     })
     const sessionId = getActiveSessionId()
     if (sessionId !== PUBLIC_SESSION_ID) {
      const activeRealm = realms.find(
-      (r) => sessionId === r.session.id,
+      (r) => sessionId === r.session.id
      )
      if (
       activeRealm?.session.id !==
@@ -45,31 +45,31 @@ function displayAppAccounts() {
      globalRealmTab.classList.add('active')
     }
     setActiveSessionId(PUBLIC_SESSION_ID)
-   },
-  },
+   }
+  }
  })
 
  function addAccount(session) {
   const realmTabLabel = elem({
    attributes: {
-    title: session.url,
+    title: session.url
    },
    tagName: 'span',
    textContent:
     session.name ??
     new URL(session.url).origin ??
-    'Error',
+    'Error'
   })
   function switchTo() {
    const sessionId = getActiveSessionId()
    const activeRealm = realms.find(
-    (r) => sessionId === r.session.id,
+    (r) => sessionId === r.session.id
    )
    const activeRealmTab =
     activeRealm?.realmTab ?? globalRealmTab
    activeRealmTab.classList.remove('active')
    const switchToRealm = realms.find(
-    (r) => session.id === r.session.id,
+    (r) => session.id === r.session.id
    )
    if (switchToRealm) {
     const secondRealmCandidate =
@@ -81,11 +81,11 @@ function displayAppAccounts() {
     }
     setActiveSessionId(session.id)
     switchToRealm.realmTab.classList.add(
-     'active',
+     'active'
     )
     switchToRealm.realmTab.scrollIntoView({
      behavior: 'smooth',
-     inline: 'nearest',
+     inline: 'nearest'
     })
    }
   }
@@ -108,7 +108,7 @@ function displayAppAccounts() {
        removeSession(session.id)
        if (activeSessionId === session.id) {
         const index = sessions.findIndex(
-         (x) => x.id === session.id,
+         (x) => x.id === session.id
         )
         const switchToSessionId =
          sessions[index - 1]?.id ??
@@ -117,8 +117,7 @@ function displayAppAccounts() {
          typeof switchToSessionId === 'string'
           ? realms.find(
              (r) =>
-              switchToSessionId ===
-              r.session.id,
+              switchToSessionId === r.session.id
             )
           : undefined
         const activeRealmTab =
@@ -127,23 +126,23 @@ function displayAppAccounts() {
         secondMostRecentRealm = undefined
         setActiveSessionId(
          activeRealm?.session?.id ??
-          PUBLIC_SESSION_ID,
+          PUBLIC_SESSION_ID
         )
        }
-      },
-     },
-    }),
+      }
+     }
+    })
    ],
    events: {
-    click: switchTo,
-   },
+    click: switchTo
+   }
   })
   element.insertBefore(realmTab, addRealm)
   return {
    session,
    switchTo,
    realmTab,
-   realmTabLabel,
+   realmTabLabel
   }
  }
 
@@ -153,26 +152,26 @@ function displayAppAccounts() {
    icon('plus', 'sm'),
    elem({
     tagName: 'span',
-    textContent: ' realm',
-   }),
+    textContent: ' realm'
+   })
   ],
   events: {
-   click: createSession,
-  },
+   click: createSession
+  }
  })
 
  const element = elem({
   classes: ['app-accounts'],
-  children: [globalRealmTab, addRealm],
+  children: [globalRealmTab, addRealm]
  })
 
  realms = listSessions().map((session) =>
-  addAccount(session),
+  addAccount(session)
  )
 
  const sessionId = getActiveSessionId()
  const activeRealm = realms.find(
-  (r) => sessionId === r.session.id,
+  (r) => sessionId === r.session.id
  )
 
  const activeRealmTab =
@@ -182,7 +181,7 @@ function displayAppAccounts() {
  setTimeout(function () {
   activeRealmTab.scrollIntoView({
    behavior: 'instant',
-   inline: 'center',
+   inline: 'center'
   })
  })
 
@@ -198,12 +197,12 @@ function displayAppAccounts() {
 async function displayChannelMessageReplies(
  messageChannel,
  formattedChannelMessageData,
- messageText,
+ messageText
 ) {
  mainContent.innerHTML = ''
  const message =
   formattedChannelMessageData.find(
-   (x) => x.text === messageText,
+   (x) => x.text === messageText
   )
  if (!message) {
   mainContent.innerHTML =
@@ -213,8 +212,8 @@ async function displayChannelMessageReplies(
  const replyChannelData = await withLoading(
   networkChannelSeek(
    messageChannel,
-   getHourNumber(),
-  ),
+   getHourNumber()
+  )
  )
 
  if (
@@ -226,14 +225,14 @@ async function displayChannelMessageReplies(
   throw new Error(
    replyChannelData.error ??
     `Error seeking reply channel: ${JSON.stringify(
-     replyChannelData,
-    )}`,
+     replyChannelData
+    )}`
   )
  }
 
  const formattedMessageReplyData =
   formatMessageData(
-   replyChannelData.response.messages,
+   replyChannelData.response.messages
   )
 
  attachMessages(
@@ -245,7 +244,7 @@ async function displayChannelMessageReplies(
   undefined,
   true,
   false,
-  true,
+  true
  )
 }
 
@@ -253,14 +252,14 @@ function displayChannelArticle(
  articleElement,
  channel,
  message,
- messageContentFormatter,
+ messageContentFormatter
 ) {
  console.log(
   `Attaching message with formatter(${
    messageContentFormatter?.(
-    'status:example',
+    'status:example'
    ) ?? 'none'
-  })`,
+  })`
  )
  attachMessage(
   channel,
@@ -272,14 +271,14 @@ function displayChannelArticle(
   false,
   false,
   false,
-  messageContentFormatter,
+  messageContentFormatter
  )
 }
 
 function displayChannelHome(
  channel,
  formattedMessageData,
- formattedChannelData,
+ formattedChannelData
 ) {
  messageContent.innerHTML = ''
  mainContent.innerHTML = ''
@@ -288,18 +287,18 @@ function displayChannelHome(
    children: [
     elem({
      tagName: 'span',
-     textContent: 'Channel ',
+     textContent: 'Channel '
     }),
     elem({
      attributes: {
-      href: `/#/${encodeURIComponent(channel)}`,
+      href: `/#/${encodeURIComponent(channel)}`
      },
      tagName: 'a',
      textContent: `#${
       channel.length > 0
        ? channel
        : HOME_CHANNEL_ICON
-     }`,
+     }`
     }),
     elem({
      tagName: 'span',
@@ -311,10 +310,10 @@ function displayChannelHome(
       formattedMessageData.length === 1
        ? ''
        : 's'
-     }`,
-    }),
-   ],
-  }),
+     }`
+    })
+   ]
+  })
  )
  const sendToRealm = secondMostRecentRealm
   ? secondMostRecentRealm === PUBLIC_SESSION_ID
@@ -330,21 +329,21 @@ function displayChannelHome(
   sendToRealm,
   false,
   true,
-  true,
+  true
  )
  attachChannels(
   mainContent,
-  formattedChannelData,
+  formattedChannelData
  )
 }
 
 function displayChannelMessage(
  channel,
  formattedMessageData,
- messageText,
+ messageText
 ) {
  const message = formattedMessageData.find(
-  (x) => x.text === messageText,
+  (x) => x.text === messageText
  )
  messageContent.innerHTML = ''
  if (message) {
@@ -356,35 +355,33 @@ function displayChannelMessage(
          elem({
           tagName: 'span',
           textContent:
-           'Viewing the only message on channel ',
-         }),
+           'Viewing the only message on channel '
+         })
         ]
       : [
          elem({
           tagName: 'span',
-          textContent: 'Viewing one of ',
+          textContent: 'Viewing one of '
          }),
          elem({
           tagName: 'span',
-          textContent: ` ${formattedMessageData.length} messages on channel `,
-         }),
+          textContent: ` ${formattedMessageData.length} messages on channel `
+         })
         ]),
 
      elem({
       attributes: {
-       href: `/#/${encodeURIComponent(
-        channel,
-       )}`,
+       href: `/#/${encodeURIComponent(channel)}`
       },
       tagName: 'a',
       textContent: `#${
        channel.length > 0
         ? channel
         : HOME_CHANNEL_ICON
-      }`,
-     }),
-    ],
-   }),
+      }`
+     })
+    ]
+   })
   )
   attachMessage(
    channel,
@@ -393,7 +390,7 @@ function displayChannelMessage(
    true,
    undefined,
    true,
-   true,
+   true
   )
  } else {
   messageContent.innerHTML =
@@ -415,29 +412,29 @@ function attachChannels(container, channels) {
    name: isNamespaced
     ? channelName.split(':')[0] + ':'
     : '',
-   score: 0,
+   score: 0
   })
  }
  lastAttachedChannels = channels.filter(
-  (c) => c.name.length <= 25,
+  (c) => c.name.length <= 25
  )
  container.appendChild(
   elem({
    attributes: {
     'data-tour-off':
-     'Discover popular channels.',
+     'Discover popular channels.'
    },
    classes: ['channel-list'],
    children: [
     elem({
      tagName: 'p',
-     textContent: 'Popular channels',
-    }),
+     textContent: 'Popular channels'
+    })
    ].concat(
     lastAttachedChannels.map((c) =>
      elem({
       attributes: {
-       href: `/#/${encodeURIComponent(c.name)}`,
+       href: `/#/${encodeURIComponent(c.name)}`
       },
       classes: ['channel'],
       tagName: 'a',
@@ -448,18 +445,16 @@ function attachChannels(container, channels) {
       children: [
        elem({
         attributes: {
-         title: Math.round(c.score).toString(
-          10,
-         ),
+         title: Math.round(c.score).toString(10)
         },
         tagName: 'span',
-        textContent: niceNumber(c.score),
-       }),
-      ],
-     }),
-    ),
-   ),
-  }),
+        textContent: niceNumber(c.score)
+       })
+      ]
+     })
+    )
+   )
+  })
  )
 }
 
@@ -472,7 +467,7 @@ function attachMessages(
  sendToRealm = undefined,
  copyToReply = false,
  includeReplies = false,
- includeReactions = false,
+ includeReactions = false
 ) {
  if (messages.length === 0) {
   mainContent.appendChild(
@@ -480,8 +475,8 @@ function attachMessages(
     tagName: 'p',
     textContent:
      emptyMessage ??
-     'This channel has no content. Be the first to write a message!',
-   }),
+     'This channel has no content. Be the first to write a message!'
+   })
   )
  }
  for (const index in messages) {
@@ -494,7 +489,7 @@ function attachMessages(
    copyToReply,
    index === '0',
    includeReplies,
-   includeReactions,
+   includeReactions
   )
  }
 }
@@ -509,7 +504,7 @@ function attachMessage(
  includeTourAttributes,
  includeReplies = false,
  includeReactions = false,
- messageContentFormatter = undefined,
+ messageContentFormatter = undefined
 ) {
  const content = elem()
  addTextBlocks(
@@ -519,7 +514,7 @@ function attachMessage(
    ? message.text.substring(8)
    : messageContentFormatter
      ? messageContentFormatter(message.text)
-     : message.text,
+     : message.text
  )
  addYouTubeEmbed(content, message.text)
  addImageEmbed(content, message.text)
@@ -529,77 +524,77 @@ function attachMessage(
   classes: ['agree'],
   children: [icon('yes')],
   attributes: {
-   title: 'I agree with this',
+   title: 'I agree with this'
   },
   dataset: includeTourAttributes
    ? {
       tour:
-       'Click here to promote the message. The maximum promotion speed is +10 points per hour.',
+       'Click here to promote the message. The maximum promotion speed is +10 points per hour.'
      }
    : undefined,
   events: {
    async click() {
     message.data.velocity = Math.min(
      message.data.velocity + 1,
-     10,
+     10
     )
     if (
      (await withLoading(
       networkMessageSend(
        channel,
        message.text,
-       message.data.velocity,
-      ),
+       message.data.velocity
+      )
      )) !== false
     ) {
      agreeButton.classList.add('agreed')
      disagreeButton.classList.remove(
-      'disagreed',
+      'disagreed'
      )
      renderScore()
     }
-   },
+   }
   },
-  tagName: 'button',
+  tagName: 'button'
  })
  const disagreeButton = elem({
   classes: ['disagree'],
   children: [icon('no')],
   attributes: {
-   title: 'I disagree with this',
+   title: 'I disagree with this'
   },
   dataset: includeTourAttributes
    ? {
       tour:
-       'Click here to demote the message. The maximum demotion speed is -10 points per hour.',
+       'Click here to demote the message. The maximum demotion speed is -10 points per hour.'
      }
    : undefined,
   events: {
    async click() {
     message.data.velocity = Math.max(
      message.data.velocity - 1,
-     -10,
+     -10
     )
     if (
      (await withLoading(
       networkMessageSend(
        channel,
        message.text,
-       message.data.velocity,
-      ),
+       message.data.velocity
+      )
      )) !== false
     ) {
      agreeButton.classList.remove('agreed')
      disagreeButton.classList.add('disagreed')
      renderScore()
     }
-   },
+   }
   },
-  tagName: 'button',
+  tagName: 'button'
  })
  function renderScore() {
   const messageScoreText = niceNumber(
-   message.score ?? 0,
+   message.score ?? 0
   )
   const velocityText =
    message.data.velocity !== 0
@@ -612,17 +607,17 @@ function attachMessage(
    elem({
     attributes: {
      title: Math.round(message.score).toString(
-      10,
-     ),
+      10
+     )
     },
-    textContent: `${messageScoreText}`,
-   }),
+    textContent: `${messageScoreText}`
+   })
   )
   score.appendChild(
    elem({
     classes: ['velocity'],
-    textContent: velocityText,
-   }),
+    textContent: velocityText
+   })
   )
  }
  const score = elem({
@@ -630,20 +625,18 @@ function attachMessage(
   dataset: includeTourAttributes
    ? {
       tour:
-       'The message score. The score continues to increase or decrease unless the movement is stopped.',
+       'The message score. The score continues to increase or decrease unless the movement is stopped.'
      }
-   : undefined,
+   : undefined
  })
  renderScore()
  const messageLink = `/#/${encodeURIComponent(
-  channel,
+  channel
  )}/${btoa(encodeURIComponent(message.text))}`
  const dateContainer = elem({
   attributes: {
    href: messageLink,
-   title: new Date(
-    message.data.seen,
-   ).toString(),
+   title: new Date(message.data.seen).toString()
   },
   classes: ['news-date'],
   events: {
@@ -652,52 +645,52 @@ function attachMessage(
      getUrlData()
     focusOnMessage = message
     route()
-   },
+   }
   },
   tagName: 'a',
   textContent: localDateTime(
-   new Date(message.data.seen),
-  ),
+   new Date(message.data.seen)
+  )
  })
  const articleToolButtons = elem({
   classes: ['article-tool-buttons'],
-  children: [agreeButton, disagreeButton],
+  children: [agreeButton, disagreeButton]
  })
  const articleTools = elem({
   classes: ['article-tools'],
-  children: [score, articleToolButtons],
+  children: [score, articleToolButtons]
  })
  articleTools.appendChild(
   elem({
-   style: { flexGrow: 1 },
-  }),
+   style: { flexGrow: 1 }
+  })
  )
  if (includeReactions) {
   attachReactions(
    articleTools,
    channel,
-   message,
+   message
   )
  }
  const article = elem({
   children: [content, articleTools],
-  tagName: 'article',
+  tagName: 'article'
  })
  const newsItem = elem({
   classes: ['news'],
-  children: [article, dateContainer],
+  children: [article, dateContainer]
  })
  if (includeFooter) {
   function footerLinkSeparator() {
    messageFooter.appendChild(
     elem({
      tagName: 'span',
-     textContent: ' • ',
-    }),
+     textContent: ' • '
+    })
    )
   }
   const messageFooter = elem({
-   classes: ['message-footer'],
+   classes: ['message-footer']
   })
   newsItem.appendChild(messageFooter)
   const labelsElement =
@@ -706,7 +699,7 @@ function attachMessage(
   async function renderFooter() {
    messageFooter.innerHTML = ''
    const href = `/#/${encodeURIComponent(
-    channel,
+    channel
    )}/${btoa(encodeURIComponent(message.text))}`
    await labelMessage(
     labelsElement,
@@ -714,32 +707,32 @@ function attachMessage(
     message,
     messageFooter,
     false,
-    allLabels,
+    allLabels
    )
    const repliesLink = elem({
     attributes: {
-     href,
+     href
     },
     dataset: includeTourAttributes
      ? {
         tour:
-         'View the message, including any replies. You can also reply to the message from here.',
+         'View the message, including any replies. You can also reply to the message from here.'
        }
      : undefined,
     tagName: 'a',
-    textContent: 'View message',
+    textContent: 'View message'
    })
    messageFooter.appendChild(repliesLink)
    footerLinkSeparator()
    const copyMessageLink = elem({
     attributes: {
-     href,
+     href
     },
     events: {
      click(e) {
       e.preventDefault()
       navigator.clipboard.writeText(
-       message.text,
+       message.text
       )
       copyMessageLink.textContent =
        '✔ message copied'
@@ -747,16 +740,16 @@ function attachMessage(
        copyMessageLink.textContent =
         'copy message'
       }, 2e3)
-     },
+     }
     },
     tagName: 'a',
-    textContent: 'copy message',
+    textContent: 'copy message'
    })
    messageFooter.appendChild(copyMessageLink)
    footerLinkSeparator()
    const labelMessageLink = elem({
     attributes: {
-     href,
+     href
     },
     events: {
      async click(e) {
@@ -767,7 +760,7 @@ function attachMessage(
        message,
        messageFooter,
        true,
-       allLabels,
+       allLabels
       )
       labelMessageLink.textContent =
        '✔ message labeled'
@@ -775,10 +768,10 @@ function attachMessage(
        labelMessageLink.textContent =
         'label message'
       }, 2e3)
-     },
+     }
     },
     tagName: 'a',
-    textContent: 'label message',
+    textContent: 'label message'
    })
    messageFooter.appendChild(labelMessageLink)
    if (sendToRealm) {
@@ -789,12 +782,12 @@ function attachMessage(
     const sendToLabel = `send to ${label}`
     const sendToLink = elem({
      attributes: {
-      href,
+      href
      },
      dataset: includeTourAttributes
       ? {
          tour:
-          'Copy this message into another realm.',
+          'Copy this message into another realm.'
         }
       : undefined,
      events: {
@@ -807,30 +800,30 @@ function attachMessage(
          Math.max(1, message.data.velocity),
          sendToRealm === PUBLIC_SESSION_ID
           ? PUBLIC_SESSION_ID
-          : sendToRealm.id,
-        ),
+          : sendToRealm.id
+        )
        )
        sendToLink.textContent = `✔ sent to ${label}`
-      },
+      }
      },
      tagName: 'a',
-     textContent: sendToLabel,
+     textContent: sendToLabel
     })
     messageFooter.appendChild(
      elem({
       tagName: 'span',
-      textContent: ' • ',
-     }),
+      textContent: ' • '
+     })
     )
     messageFooter.appendChild(sendToLink)
    }
    const copyToReplyLink = elem({
     attributes: {
-     href,
+     href
     },
     dataset: includeTourAttributes
      ? {
-        tour: 'Copy message content to reply.',
+        tour: 'Copy message content to reply.'
        }
      : undefined,
     events: {
@@ -841,31 +834,31 @@ function attachMessage(
       composeTextarea.selectionStart = 0
       composeTextarea.selectionEnd =
        composeTextarea.value.length
-     },
+     }
     },
     tagName: 'a',
     textContent: copyToReply
      ? 'reply with message'
-     : 'new with message',
+     : 'new with message'
    })
    messageFooter.appendChild(
     elem({
      tagName: 'span',
-     textContent: ' • ',
-    }),
+     textContent: ' • '
+    })
    )
    messageFooter.appendChild(copyToReplyLink)
 
    footerLinkSeparator()
    const copyViewMessageLink = elem({
     attributes: {
-     href,
+     href
     },
     events: {
      click(e) {
       e.preventDefault()
       navigator.clipboard.writeText(
-       `${location.origin}${href}`,
+       `${location.origin}${href}`
       )
       copyViewMessageLink.textContent =
        '✔ link copied'
@@ -873,18 +866,18 @@ function attachMessage(
        copyViewMessageLink.textContent =
         'copy link'
       }, 2e3)
-     },
+     }
     },
     dataset: includeTourAttributes
      ? {
-        tour: 'Copy a link to this message.',
+        tour: 'Copy a link to this message.'
        }
      : undefined,
     tagName: 'a',
-    textContent: 'copy link',
+    textContent: 'copy link'
    })
    messageFooter.appendChild(
-    copyViewMessageLink,
+    copyViewMessageLink
    )
    if (
     message.score < MESSAGE_PERSIST_THRESHOLD
@@ -893,12 +886,12 @@ function attachMessage(
     const unsendLink = elem({
      attributes: {
       href,
-      title: unsendInfo,
+      title: unsendInfo
      },
      classes: ['unsend'],
      dataset: includeTourAttributes
       ? {
-         tour: unsendInfo,
+         tour: unsendInfo
         }
       : undefined,
      events: {
@@ -911,8 +904,8 @@ function attachMessage(
            message.text.length > 100
             ? '...'
             : ''
-          }`,
-         )}`,
+          }`
+         )}`
         )
        ) {
         return
@@ -920,22 +913,22 @@ function attachMessage(
        await withLoading(
         networkMessageUnsend(
          channel,
-         message.text,
-        ),
+         message.text
+        )
        )
        unsendLink.textContent = `✔ unsent`
        await new Promise((r) =>
-        setTimeout(r, 1000),
+        setTimeout(r, 1000)
        )
        newsItem.classList.add('unsent')
        await new Promise((r) =>
-        setTimeout(r, 1000),
+        setTimeout(r, 1000)
        )
        newsItem.remove()
-      },
+      }
      },
      tagName: 'a',
-     textContent: 'unsend',
+     textContent: 'unsend'
     })
     footerLinkSeparator()
     messageFooter.appendChild(unsendLink)
@@ -951,7 +944,7 @@ function attachMessage(
   setTimeout(function () {
    article.scrollIntoView({
     behavior: 'smooth',
-    block: 'nearest',
+    block: 'nearest'
    })
   }, 50)
   article.classList.add('highlight')
@@ -961,14 +954,14 @@ function attachMessage(
 
 function displayAutocompleteChannels(
  channelInput,
- cancelChannelInput,
+ cancelChannelInput
 ) {
  let channelHistory
  function readChannelHistory() {
   if (!channelHistory) {
    channelHistory = read(
     'tmi:channel-history',
-    {},
+    {}
    )
   }
   return channelHistory
@@ -992,10 +985,10 @@ function displayAutocompleteChannels(
     clearTimeout(closeTimeout)
     openTimeout = setTimeout(
      () => channelInput.focus(),
-     250,
+     250
     )
-   },
-  },
+   }
+  }
  })
  let isOpen = false
  const historyElement = elem({
@@ -1005,11 +998,11 @@ function displayAutocompleteChannels(
     events: {
      mousedown() {
       cancelChannelInput()
-     },
-    },
+     }
+    }
    }),
-   channelHistoryListElement,
-  ],
+   channelHistoryListElement
+  ]
  })
  function close() {
   closeTimeout = setTimeout(closeNow, 250)
@@ -1027,10 +1020,10 @@ function displayAutocompleteChannels(
   const terms = text.toLowerCase().split(/\s+/)
   for (const [
    historyChannel,
-   historyEntry,
+   historyEntry
   ] of historyEntries) {
    historyEntry.style.display = terms.every(
-    (term) => historyChannel.includes(term),
+    (term) => historyChannel.includes(term)
    )
     ? 'block'
     : 'none'
@@ -1046,7 +1039,7 @@ function displayAutocompleteChannels(
   channelHistoryListElement.innerHTML = ''
   historyEntries = []
   for (const [channel] of Object.entries(
-   readChannelHistory(),
+   readChannelHistory()
   )
    .filter(([channel]) => channel.length <= 25)
    .sort(function ([, a], [, b]) {
@@ -1055,7 +1048,7 @@ function displayAutocompleteChannels(
    const historyEntry = elem({
     tagName: 'a',
     attributes: {
-     href: `#/${encodeURIComponent(channel)}`,
+     href: `#/${encodeURIComponent(channel)}`
     },
     children: [
      elem({
@@ -1063,7 +1056,7 @@ function displayAutocompleteChannels(
       textContent:
        channel === ''
         ? HOME_CHANNEL_ICON
-        : channel,
+        : channel
      }),
      elem({
       classes: ['remove'],
@@ -1077,17 +1070,17 @@ function displayAutocompleteChannels(
         const history = readChannelHistory()
         delete history[channel]
         writeChannelHistory(history)
-       },
-      },
-     }),
-    ],
+       }
+      }
+     })
+    ]
    })
    channelHistoryListElement.appendChild(
-    historyEntry,
+    historyEntry
    )
    historyEntries.push([
     channel.toLowerCase(),
-    historyEntry,
+    historyEntry
    ])
   }
   lastAttachedChannels?.forEach?.(
@@ -1095,7 +1088,7 @@ function displayAutocompleteChannels(
     const historyEntry = elem({
      tagName: 'a',
      attributes: {
-      href: `#/${encodeURIComponent(channel)}`,
+      href: `#/${encodeURIComponent(channel)}`
      },
      classes: ['small'],
      children: [
@@ -1104,23 +1097,23 @@ function displayAutocompleteChannels(
        textContent:
         channel === ''
          ? HOME_CHANNEL_ICON
-         : channel,
+         : channel
       }),
       elem({
        classes: ['score'],
        tagName: 'span',
-       textContent: niceNumber(score),
-      }),
-     ],
+       textContent: niceNumber(score)
+      })
+     ]
     })
     channelHistoryListElement.appendChild(
-     historyEntry,
+     historyEntry
     )
     historyEntries.push([
      channel.toLowerCase(),
-     historyEntry,
+     historyEntry
     ])
-   },
+   }
   )
   document.body.appendChild(historyElement)
   isOpen = true
@@ -1139,21 +1132,21 @@ function displayAutocompleteChannels(
   close,
   filter,
   open,
-  visit,
+  visit
  }
 }
 
 function displayAutocompleteActivitySearch(
  filterInput,
  cancelFilterInput,
- applyFilter,
+ applyFilter
 ) {
  let filterHistory
  function readFilterHistory() {
   if (!filterHistory) {
    filterHistory = read(
     'tmi:activity-filter-history',
-    {},
+    {}
    )
   }
   return filterHistory
@@ -1177,10 +1170,10 @@ function displayAutocompleteActivitySearch(
     clearTimeout(closeTimeout)
     openTimeout = setTimeout(
      () => filterInput.focus(),
-     250,
+     250
     )
-   },
-  },
+   }
+  }
  })
  let isOpen = false
  const historyElement = elem({
@@ -1190,11 +1183,11 @@ function displayAutocompleteActivitySearch(
     events: {
      mousedown() {
       cancelFilterInput()
-     },
-    },
+     }
+    }
    }),
-   filterHistoryListElement,
-  ],
+   filterHistoryListElement
+  ]
  })
  function close() {
   closeTimeout = setTimeout(closeNow, 250)
@@ -1212,10 +1205,10 @@ function displayAutocompleteActivitySearch(
   const terms = text.toLowerCase().split(/\s+/)
   for (const [
    historyChannel,
-   historyEntry,
+   historyEntry
   ] of historyEntries) {
    historyEntry.style.display = terms.every(
-    (term) => historyChannel.includes(term),
+    (term) => historyChannel.includes(term)
    )
     ? 'block'
     : 'none'
@@ -1231,7 +1224,7 @@ function displayAutocompleteActivitySearch(
   filterHistoryListElement.innerHTML = ''
   historyEntries = []
   for (const [filter] of Object.entries(
-   readFilterHistory(),
+   readFilterHistory()
   ).sort(function ([, a], [, b]) {
    return b - a
   })) {
@@ -1242,12 +1235,12 @@ function displayAutocompleteActivitySearch(
       e.stopPropagation()
       e.preventDefault()
       applyFilter(filter)
-     },
+     }
     },
     children: [
      elem({
       tagName: 'span',
-      textContent: filter,
+      textContent: filter
      }),
      elem({
       classes: ['remove'],
@@ -1264,17 +1257,17 @@ function displayAutocompleteActivitySearch(
         const history = readFilterHistory()
         delete history[filter]
         writeFilterHistory(history)
-       },
-      },
-     }),
-    ],
+       }
+      }
+     })
+    ]
    })
    filterHistoryListElement.appendChild(
-    historyEntry,
+    historyEntry
    )
    historyEntries.push([
     filter.toLowerCase(),
-    historyEntry,
+    historyEntry
    ])
   }
   document.body.appendChild(historyElement)
@@ -1297,7 +1290,7 @@ function displayAutocompleteActivitySearch(
   close,
   filter,
   open,
-  visit,
+  visit
  }
 }
 
@@ -1305,14 +1298,14 @@ function displayActivity() {
  const element = elem({
   attributes: {
    'data-tour':
-    'Read the news, all recent messages and replies in this realm.',
+    'Read the news, all recent messages and replies in this realm.'
   },
-  classes: ['activity-container-inner'],
+  classes: ['activity-container-inner']
  })
 
  const outerElement = elem({
   classes: ['activity-container'],
-  children: [element],
+  children: [element]
  })
 
  let isVisible = false
@@ -1320,7 +1313,7 @@ function displayActivity() {
  const endOfNewsMessageElement = elem({
   tagName: 'p',
   textContent: 'End of news.',
-  classes: ['text-message'],
+  classes: ['text-message']
  })
 
  function endOfNews() {
@@ -1342,7 +1335,7 @@ function displayActivity() {
   isVisible = true
   document.body.setAttribute(
    'data-mode',
-   'activity',
+   'activity'
   )
   await load()
   fakeScroll()
@@ -1393,7 +1386,7 @@ function displayActivity() {
    function (chunk) {
     nextChunk = chunk - 1
     isLoading = false
-   },
+   }
   )
   if (
    chunk2 === undefined &&
@@ -1410,8 +1403,8 @@ function displayActivity() {
   }
   lastMessages.push(
    ...(news.data?.map?.((newsMessage) =>
-    attachNewsMessage(element, newsMessage),
-   ) ?? []),
+    attachNewsMessage(element, newsMessage)
+   ) ?? [])
   )
   filterAgain()
   return nextChunk
@@ -1433,7 +1426,7 @@ function displayActivity() {
    if (
     !scrolledPastBottom(
      activityContainer.element,
-     true,
+     true
     )
    ) {
     break
@@ -1446,7 +1439,7 @@ function displayActivity() {
    channel,
    element,
    message,
-   parentMessage,
+   parentMessage
   } of lastMessages) {
    const messageIncludesAllTerms =
     filterTerms.length === 0
@@ -1455,7 +1448,7 @@ function displayActivity() {
         (term) =>
          channel.includes(term) ||
          message.includes(term) ||
-         parentMessage?.includes(term),
+         parentMessage?.includes(term)
        )
    element.style.display =
     messageIncludesAllTerms ? 'block' : 'none'
@@ -1469,7 +1462,7 @@ function displayActivity() {
   show,
   hide,
   toggle,
-  loadMore,
+  loadMore
  }
 }
 
@@ -1486,16 +1479,16 @@ function localDateTime(dt) {
 
 function attachNewsMessage(
  container,
- { message, channel, seen },
+ { message, channel, seen }
 ) {
  const content = elem()
  const isReaction = channel.startsWith(
-  'reactions:message-',
+  'reactions:message-'
  )
  addTextBlocks(content, message, (x) =>
   isReaction && x.startsWith('reaction')
    ? x.substring('reaction'.length)
-   : x,
+   : x
  )
  addYouTubeEmbed(content, message)
  addImageEmbed(content, message)
@@ -1516,24 +1509,24 @@ function attachNewsMessage(
   if (!channel.startsWith(REACTION_PREFIX)) {
    console.error(
     'Unknown reaction channel',
-    channel,
+    channel
    )
    return elem({
     tagName: 'p',
     textContent:
-     'Error: Unknown reaction channel',
+     'Error: Unknown reaction channel'
    })
   }
 
   const messageLink = `/#/${encodeURIComponent(
-   reactionChannel,
+   reactionChannel
   )}/${btoa(
-   encodeURIComponent(reactionMessage),
+   encodeURIComponent(reactionMessage)
   )}`
 
   const reactionChannelContainer = elem({
    attributes: {
-    href: messageLink,
+    href: messageLink
    },
    classes: ['news-channel'],
    events: {
@@ -1544,40 +1537,40 @@ function attachNewsMessage(
      if (reactionChannel === currentChannel) {
       route()
      }
-    },
+    }
    },
    tagName: 'a',
    textContent: `#${
     reactionChannel === ''
      ? HOME_CHANNEL_ICON
      : reactionChannel
-   }`,
+   }`
   })
   const reactionContent = elem({
    children: [reactionChannelContainer],
    classes: ['reply'],
-   tagName: 'blockquote',
+   tagName: 'blockquote'
   })
   addTextBlocks(
    reactionContent,
-   reactionMessage,
+   reactionMessage
   )
   addYouTubeEmbed(
    reactionContent,
-   reactionMessage,
+   reactionMessage
   )
   addImageEmbed(
    reactionContent,
-   reactionMessage,
+   reactionMessage
   )
   addOpenGraphLink(
    reactionContent,
-   reactionMessage,
+   reactionMessage
   )
   const dateContainer = elem({
    attributes: {
     href: messageLink,
-    title: new Date(seen).toString(),
+    title: new Date(seen).toString()
    },
    classes: ['news-date'],
    events: {
@@ -1588,18 +1581,18 @@ function attachNewsMessage(
      if (reactionChannel === currentChannel) {
       route()
      }
-    },
+    }
    },
    tagName: 'a',
-   textContent: localDateTime(new Date(seen)),
+   textContent: localDateTime(new Date(seen))
   })
   const article = elem({
    children: [content, reactionContent],
-   tagName: 'article',
+   tagName: 'article'
   })
   const newsItem = elem({
    classes: ['news', 'reaction-message'],
-   children: [article, dateContainer],
+   children: [article, dateContainer]
   })
   container.appendChild(newsItem)
   return {
@@ -1607,7 +1600,7 @@ function attachNewsMessage(
    element: newsItem,
    message: message.toLowerCase(),
    reactionMessage:
-    reactionMessage.toLowerCase(),
+    reactionMessage.toLowerCase()
   }
  }
  const isReply = channel.startsWith('replies@')
@@ -1617,11 +1610,11 @@ function attachNewsMessage(
    .split(':')
    .map(decodeURIComponent)
   const messageLink = `/#/${encodeURIComponent(
-   parentChannel,
+   parentChannel
   )}/${btoa(encodeURIComponent(parentMessage))}`
   const parentChannelContainer = elem({
    attributes: {
-    href: messageLink,
+    href: messageLink
    },
    classes: ['news-channel'],
    events: {
@@ -1632,19 +1625,19 @@ function attachNewsMessage(
      if (parentChannel === currentChannel) {
       route()
      }
-    },
+    }
    },
    tagName: 'a',
    textContent: `#${
     parentChannel === ''
      ? HOME_CHANNEL_ICON
      : parentChannel
-   }`,
+   }`
   })
   const parentContent = elem({
    children: [parentChannelContainer],
    classes: ['reply'],
-   tagName: 'blockquote',
+   tagName: 'blockquote'
   })
   addTextBlocks(parentContent, parentMessage)
   addYouTubeEmbed(parentContent, parentMessage)
@@ -1653,7 +1646,7 @@ function attachNewsMessage(
   const dateContainer = elem({
    attributes: {
     href: messageLink,
-    title: new Date(seen).toString(),
+    title: new Date(seen).toString()
    },
    classes: ['news-date'],
    events: {
@@ -1664,31 +1657,31 @@ function attachNewsMessage(
      if (parentChannel === currentChannel) {
       route()
      }
-    },
+    }
    },
    tagName: 'a',
-   textContent: localDateTime(new Date(seen)),
+   textContent: localDateTime(new Date(seen))
   })
   const article = elem({
    children: [content, parentContent],
-   tagName: 'article',
+   tagName: 'article'
   })
   const newsItem = elem({
    classes: ['news'],
-   children: [article, dateContainer],
+   children: [article, dateContainer]
   })
   container.appendChild(newsItem)
   return {
    channel: '#' + parentChannel.toLowerCase(),
    element: newsItem,
    message: message.toLowerCase(),
-   parentMessage: parentMessage.toLowerCase(),
+   parentMessage: parentMessage.toLowerCase()
   }
  } else {
   const dateContainer = elem({
    attributes: {
     href: `#/${encodeURIComponent(channel)}`,
-    title: new Date(seen).toString(),
+    title: new Date(seen).toString()
    },
    classes: ['news-date'],
    events: {
@@ -1699,14 +1692,14 @@ function attachNewsMessage(
      if (channel === currentChannel) {
       route()
      }
-    },
+    }
    },
    tagName: 'a',
-   textContent: localDateTime(new Date(seen)),
+   textContent: localDateTime(new Date(seen))
   })
   const channelContainer = elem({
    attributes: {
-    href: `#/${encodeURIComponent(channel)}`,
+    href: `#/${encodeURIComponent(channel)}`
    },
    classes: ['news-channel'],
    events: {
@@ -1717,30 +1710,30 @@ function attachNewsMessage(
      if (channel === currentChannel) {
       route()
      }
-    },
+    }
    },
    tagName: 'a',
    textContent: `#${
     channel === '' ? HOME_CHANNEL_ICON : channel
-   }`,
+   }`
   })
   const article = elem({
    children: [
     dateContainer,
     channelContainer,
-    content,
+    content
    ],
-   tagName: 'article',
+   tagName: 'article'
   })
   const newsItem = elem({
    classes: ['news'],
-   children: [article, dateContainer],
+   children: [article, dateContainer]
   })
   container.appendChild(newsItem)
   return {
    channel: '#' + channel.toLowerCase(),
    element: newsItem,
-   message: message.toLowerCase(),
+   message: message.toLowerCase()
   }
  }
 }
