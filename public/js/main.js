@@ -4,7 +4,7 @@ const ONE_HOUR_MS = 60 * 60 * 1000
 const autocompleteChannels =
  displayAutocompleteChannels(
   channelInput,
-  cancelChannelInput
+  cancelChannelInput,
  )
 
 addEventListener('keydown', ({ key }) => {
@@ -34,19 +34,19 @@ const COMPOSE_PLACEHOLDER_REPLY =
 
 async function updateComposeTextarea(
  channel,
- isReply
+ isReply,
 ) {
  composeTextarea.setAttribute(
   'placeholder',
   isReply
    ? COMPOSE_PLACEHOLDER_REPLY
    : channel === 'reactions'
-   ? ADD_REACTION_PLACEHOLDER_MESSAGE
-   : COMPOSE_PLACEHOLDER_MESSAGE
+     ? ADD_REACTION_PLACEHOLDER_MESSAGE
+     : COMPOSE_PLACEHOLDER_MESSAGE,
  )
  composeTextarea.setAttribute(
   'maxlength',
-  channel === 'reactions' ? 25 : 175
+  channel === 'reactions' ? 25 : 175,
  )
 }
 
@@ -79,7 +79,7 @@ const composeTextarea = elem({
       let removed = false
       const urlObj = new URL(url)
       const searchParams = new URLSearchParams(
-       urlObj.search
+       urlObj.search,
       )
       urlParametersToRemove.forEach((param) => {
        if (searchParams.has(param)) {
@@ -95,7 +95,7 @@ const composeTextarea = elem({
       return acc
      }
     },
-    text
+    text,
    )
   },
  },
@@ -141,8 +141,8 @@ const compose = elem({
      networkMessageSend(
       messageChannel,
       messageText,
-      1
-     )
+      1,
+     ),
     )) !== false
    ) {
     focusOnMessage = messageText
@@ -199,12 +199,12 @@ body.appendChild(consentPrompt)
 body.appendChild(compose)
 body.appendChild(mainContent)
 body.appendChild(
- document.getElementById('footer')
+ document.getElementById('footer'),
 )
 
 function scrolledPastBottom(
  element,
- exemptZeroScroll = false
+ exemptZeroScroll = false,
 ) {
  if (
   (!exemptZeroScroll && body.scrollTop < 1) ||
@@ -215,12 +215,12 @@ function scrolledPastBottom(
  const bottom = Math.ceil(
   document.documentElement.scrollHeight -
    body.scrollTop -
-   document.documentElement.clientHeight
+   document.documentElement.clientHeight,
  )
  const elementBottom = Math.ceil(
   document.documentElement.scrollHeight -
    element.offsetTop -
-   element.offsetHeight
+   element.offsetHeight,
  )
  return bottom < elementBottom
 }
@@ -232,12 +232,12 @@ body.addEventListener('scroll', () => {
  clearTimeout(removeTimeout)
  if (body.scrollTop < lastScrollY) {
   addTimeout = setTimeout(() =>
-   body.classList.add('scroll-up')
+   body.classList.add('scroll-up'),
   )
  } else {
   removeTimeout = setTimeout(
    () => body.classList.remove('scroll-up'),
-   500
+   500,
   )
  }
  lastScrollY = body.scrollTop
@@ -249,34 +249,34 @@ body.addEventListener('scroll', () => {
  if (
   scrolledPastBottom(
    activityContainer.element,
-   true
+   true,
   )
  ) {
   activityContainer.element.classList.add(
-   'scrolled-past-bottom'
+   'scrolled-past-bottom',
   )
   withLoading(activityContainer.loadMore())
  } else {
   activityContainer.element.classList.remove(
-   'scrolled-past-bottom'
+   'scrolled-past-bottom',
   )
  }
  if (scrolledPastBottom(messageContent)) {
   messageContent.classList.add(
-   'scrolled-past-bottom'
+   'scrolled-past-bottom',
   )
  } else {
   messageContent.classList.remove(
-   'scrolled-past-bottom'
+   'scrolled-past-bottom',
   )
  }
  if (scrolledPastBottom(mainContent)) {
   mainContent.classList.add(
-   'scrolled-past-bottom'
+   'scrolled-past-bottom',
   )
  } else {
   mainContent.classList.remove(
-   'scrolled-past-bottom'
+   'scrolled-past-bottom',
   )
  }
 })
@@ -299,14 +299,14 @@ async function route() {
   body.classList.add('on-message')
   composeTextarea.setAttribute(
    'placeholder',
-   COMPOSE_PLACEHOLDER_REPLY
+   COMPOSE_PLACEHOLDER_REPLY,
   )
  } else {
   body.classList.remove('on-message')
   body.classList.add('on-channel')
   composeTextarea.setAttribute(
    'placeholder',
-   COMPOSE_PLACEHOLDER_MESSAGE
+   COMPOSE_PLACEHOLDER_MESSAGE,
   )
  }
  if (channelInput.value.trim() !== channel) {
@@ -320,7 +320,7 @@ async function route() {
    ? 'none'
    : ''
  const channelData = await withLoading(
-  networkChannelSeek(channel, getHourNumber())
+  networkChannelSeek(channel, getHourNumber()),
  )
  if (
   (channelData && 'error' in channelData) ||
@@ -330,13 +330,13 @@ async function route() {
   throw new Error(
    channelData.error ??
     `Error seeking channel: ${JSON.stringify(
-     channelData
-    )}`
+     channelData,
+    )}`,
   )
  }
 
  const formattedMessageData = formatMessageData(
-  channelData.response.messages
+  channelData.response.messages,
  )
 
  const activeSession = getActiveSession()
@@ -349,20 +349,20 @@ async function route() {
  ) {
   renderRealm(
    realmControlContainer,
-   activeSessionId
+   activeSessionId,
   )
   return
  }
 
  const tabs = tabStrip(
   'discussion',
-  () => void 0
+  () => void 0,
  )
  tabs.add(
   'discussion',
   'Discussion',
   { switchTo() {} },
-  switchToMode('main')
+  switchToMode('main'),
  )
  tabStripContainer.innerHTML = ''
  await tabs.activate()
@@ -371,12 +371,12 @@ async function route() {
   displayChannelMessage(
    channel,
    formattedMessageData,
-   messageText
+   messageText,
   )
   await displayChannelMessageReplies(
    messageChannel,
    formattedMessageData,
-   messageText
+   messageText,
   ).catch((e) => console.error(e))
   await updateComposeTextarea(channel, true)
  } else {
@@ -384,8 +384,8 @@ async function route() {
    channel,
    formattedMessageData,
    formatChannelData(
-    channelData.response.channels
-   )
+    channelData.response.channels,
+   ),
   )
   await updateComposeTextarea(channel)
  }
@@ -400,7 +400,7 @@ async function firstRoute() {
 
 document.addEventListener(
  'DOMContentLoaded',
- firstRoute
+ firstRoute,
 )
 
 const consentKey = 'consent:ai-moderator'
@@ -453,7 +453,7 @@ To get started, consider the following statements:`,
     'I welcome animal-human communication with open arms.',
     'I would like to co-create a future where humans and animals coexist in peace and mutual respect.',
    ],
-   'Cancel'
+   'Cancel',
   )
   if (nowConsented) {
    localStorage.setItem(consentKey, 'consent')

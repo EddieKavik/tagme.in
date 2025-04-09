@@ -5,7 +5,7 @@ let hasCompletedStartup = false
 
 function switchToMode(
  mode,
- saveToStorage = true
+ saveToStorage = true,
 ) {
  return function (runSpecialActions = true) {
   if (
@@ -14,7 +14,7 @@ function switchToMode(
    !hasCompletedStartup
   ) {
    console.warn(
-    `mode ${mode} is not the same as the last known mode at startup ${lastKnownModeAtStartup}, skipping`
+    `mode ${mode} is not the same as the last known mode at startup ${lastKnownModeAtStartup}, skipping`,
    )
    return
   }
@@ -24,13 +24,13 @@ function switchToMode(
      localStorage.setItem(
       `mode-${index.toString(10)}`,
       localStorage.getItem(
-       `mode-${(index + 1).toString(10)}`
-      ) ?? 'main'
+       `mode-${(index + 1).toString(10)}`,
+      ) ?? 'main',
      )
     }
     localStorage.setItem(
      `mode--1`,
-     localStorage.getItem('mode') ?? 'main'
+     localStorage.getItem('mode') ?? 'main',
     )
     localStorage.setItem('mode', mode)
    }
@@ -48,7 +48,7 @@ function switchToMode(
 
 function restoreLastKnownMode(index = 0) {
  const lastKnownMode = localStorage.getItem(
-  index === 0 ? 'mode' : `mode-${index}`
+  index === 0 ? 'mode' : `mode-${index}`,
  )
 
  if (typeof lastKnownMode === 'string') {
@@ -74,7 +74,7 @@ function niceNumber(value) {
 
 function isInsideElementWithClass(
  target,
- className
+ className,
 ) {
  let parent = target
  while ((parent = parent.parentElement)) {
@@ -89,7 +89,7 @@ function insertAfter(child, node) {
  if (child.nextElementSibling) {
   child.parentElement.insertBefore(
    node,
-   child.nextElementSibling
+   child.nextElementSibling,
   )
  } else {
   child.parentElement.appendChild(node)
@@ -123,7 +123,7 @@ function addTextWithLinks(container, text) {
 function addTextBlocks(
  container,
  text,
- filter
+ filter,
 ) {
  const lines =
   typeof filter === 'function'
@@ -137,7 +137,7 @@ function addTextBlocks(
   if (line.trimStart().startsWith('>')) {
    const formattedLine = line.replace(
     /^> ?/,
-    ''
+    '',
    )
    if (currentQuote === null) {
     // Start a new quote
@@ -152,7 +152,7 @@ function addTextBlocks(
      document.createElement('blockquote')
     addTextWithCodeBlocks(
      quoteElement,
-     currentQuote
+     currentQuote,
     )
     container.appendChild(quoteElement)
    }
@@ -168,7 +168,7 @@ function addTextBlocks(
    document.createElement('blockquote')
   addTextWithCodeBlocks(
    quoteElement,
-   currentQuote
+   currentQuote,
   )
   container.appendChild(quoteElement)
  }
@@ -177,15 +177,15 @@ function addTextBlocks(
 function addHashTagLinks(
  container,
  text,
- isAfterLink
+ isAfterLink,
 ) {
  const parts = text.match(
-  /((?<!\&)#[^,.\s]*)|([^#]+)|(\&#\d*;?)/g
+  /((?<!\&)#[^,.\s]*)|([^#]+)|(\&#\d*;?)/g,
  )
  parts.forEach((part) => {
   if (part[0] === '#') {
    const channel = decodeURIComponent(
-    part.slice(1)
+    part.slice(1),
    )
    const a = document.createElement('a')
    a.href = `/#/${encodeURIComponent(channel)}`
@@ -199,8 +199,8 @@ function addHashTagLinks(
    container.appendChild(
     document.createTextNode(
      (isAfterLink ? ' ' : '') +
-      htmlEntities(part)
-    )
+      htmlEntities(part),
+    ),
    )
    isAfterLink = false
   }
@@ -209,7 +209,7 @@ function addHashTagLinks(
 
 function addTextWithCodeBlocks(
  container,
- text
+ text,
 ) {
  let codeBlock = false
  let codeContent = ''
@@ -288,11 +288,11 @@ function addYouTubeEmbed(container, text) {
   frame.setAttribute('frameborder', '0')
   frame.setAttribute(
    'src',
-   `//www.youtube.com/embed/${id}`
+   `//www.youtube.com/embed/${id}`,
   )
   frame.setAttribute(
    'allowfullscreen',
-   'allowfullscreen'
+   'allowfullscreen',
   )
   container.appendChild(frame)
  }
@@ -335,7 +335,7 @@ function captureScrollPosition() {
  const scrollPosition = document.body.scrollTop
  localStorage.setItem(
   'scrollPosition',
-  scrollPosition
+  scrollPosition,
  )
  document.body.scrollTo({
   behavior: 'instant',
@@ -347,7 +347,7 @@ function captureScrollPosition() {
 
 function restoreScrollPosition() {
  const scrollPosition = localStorage.getItem(
-  'scrollPosition'
+  'scrollPosition',
  )
  if (scrollPosition) {
   document.body.scrollTo({
@@ -362,7 +362,7 @@ function restoreScrollPosition() {
 function addImageByUrl(
  container,
  imgSrc,
- classes = []
+ classes = [],
 ) {
  const imageContainerReferencePosition = elem()
  const imageContainer = elem({
@@ -380,12 +380,12 @@ function addImageByUrl(
    click() {
     if (
      imageContainer.classList.contains(
-      'expanded'
+      'expanded',
      )
     ) {
      imageContainerReferencePosition.parentElement.insertBefore(
       imageContainer,
-      imageContainerReferencePosition
+      imageContainerReferencePosition,
      )
      imageContainer.classList.remove('expanded')
      restoreScrollPosition()
@@ -401,13 +401,13 @@ function addImageByUrl(
  })
  container.appendChild(imageContainer)
  container.appendChild(
-  imageContainerReferencePosition
+  imageContainerReferencePosition,
  )
 }
 
 async function addOpenGraphLink(
  container,
- text
+ text,
 ) {
  const urlMatch = text.match(isUrl)
 
@@ -427,16 +427,16 @@ async function addOpenGraphLink(
  try {
   const tagResponse = await fetch(
    `${networkRootUrl(
-    env
+    env,
    )}/og?url=${encodeURIComponent(
-    urlMatch[0]
+    urlMatch[0],
    )}${
     activeSession?.url
      ? `&kv=${encodeURIComponent(
-        activeSession?.url
+        activeSession?.url,
        )}`
      : ''
-   }`
+   }`,
   )
   if (!tagResponse.ok) {
    throw new Error(tagResponse.statusText)
@@ -458,12 +458,12 @@ async function addOpenGraphLink(
    })
    addTextWithCodeBlocks(
     descriptionElem,
-    tags.description
+    tags.description,
    )
    container.appendChild(descriptionElem)
   }
   const siteName = htmlEntities(
-   tags.site_name ?? urlMatch[0].split('/')[2]
+   tags.site_name ?? urlMatch[0].split('/')[2],
   )
   container.appendChild(
    elem({
@@ -479,7 +479,7 @@ async function addOpenGraphLink(
       : `Open ${
          tags.type ?? 'page'
         } on ${siteName}`,
-   })
+   }),
   )
  } catch (e) {
   console.warn(e)
@@ -489,7 +489,7 @@ async function addOpenGraphLink(
 async function addMessageReplies(
  channel,
  container,
- message
+ message,
 ) {
  const replies = message.data.replies
  if (
@@ -510,7 +510,7 @@ async function addMessageReplies(
     events: {
      click() {
       replyContainer.classList.toggle(
-       'expanded'
+       'expanded',
       )
      },
     },
@@ -526,7 +526,7 @@ async function addMessageReplies(
   formatMessageData(message.data.replies.top)
 
  const messageReplyChannel = `replies@${encodeURIComponent(
-  channel
+  channel,
  )}:${encodeURIComponent(message.text)}`
 
  attachMessages(
@@ -538,11 +538,11 @@ async function addMessageReplies(
   undefined,
   false,
   false,
-  true
+  true,
  )
 
  const topReplyCount = Object.keys(
-  message.data.replies.top
+  message.data.replies.top,
  ).length
  const totalReplyCount =
   message.data.replies.count
@@ -556,16 +556,16 @@ async function addMessageReplies(
    elem({
     attributes: {
      href: `/#/${encodeURIComponent(
-      channel
+      channel,
      )}/${btoa(
-      encodeURIComponent(message.text)
+      encodeURIComponent(message.text),
      )}`,
     },
     tagName: 'a',
     textContent: `View ${additionalReplies.toString(
-     10
+     10,
     )} more ${additionalRepliesText}`,
-   })
+   }),
   )
  }
  container.appendChild(replyContainer)
@@ -575,7 +575,7 @@ function htmlEntities(text) {
  const parser = new DOMParser()
  const doc = parser.parseFromString(
   text,
-  'text/html'
+  'text/html',
  )
  return doc.body.textContent
 }
@@ -605,7 +605,7 @@ function elem({
  const e = document.createElement(tagName)
  if (attributes) {
   for (const [k, v] of Object.entries(
-   attributes
+   attributes,
   )) {
    e.setAttribute(k, v)
   }
@@ -622,7 +622,7 @@ function elem({
  }
  if (dataset) {
   for (const [k, v] of Object.entries(
-   dataset
+   dataset,
   )) {
    e.dataset[k] = v
   }
@@ -678,7 +678,7 @@ function formatMessageData(messages) {
 function getDateTime(hoursSince2024) {
  const resultDate = new Date(
   begin2024GMT().getTime() +
-   hoursSince2024 * 60 * 60 * 1000
+   hoursSince2024 * 60 * 60 * 1000,
  )
  return [
   resultDate.getFullYear(),
@@ -713,16 +713,16 @@ function getHourNumber() {
  const msPerHour = 1000 * 60 * 60
  return Math.floor(
   (now.getTime() - begin2024GMT().getTime()) /
-   msPerHour
+   msPerHour,
  )
 }
 
 function messageReplyChannel(
  channel,
- messageText
+ messageText,
 ) {
  return `replies@${encodeURIComponent(
-  channel ?? ''
+  channel ?? '',
  )}:${encodeURIComponent(messageText)}`
 }
 
@@ -730,7 +730,7 @@ async function politeAlert(
  message,
  actionText,
  requiredConsent,
- allowCancel
+ allowCancel,
 ) {
  let alertBox
  const consentForm = requiredConsent
@@ -783,11 +783,11 @@ async function politeAlert(
        if (consentForm[0]) {
         const missingCheckbox =
          consentForm[0].querySelector(
-          'input:not(:checked)'
+          'input:not(:checked)',
          )
         if (missingCheckbox) {
          missingCheckbox.parentElement.classList.add(
-          'required'
+          'required',
          )
          return
         }
@@ -823,7 +823,7 @@ async function politeAlert(
      if (
       isInsideElementWithClass(
        e.target,
-       'alert-container'
+       'alert-container',
       )
      ) {
       return
@@ -847,7 +847,7 @@ function dialog(...children) {
  const compChildren = [
   elem({
    children: children.filter(
-    (v) => typeof v !== 'boolean'
+    (v) => typeof v !== 'boolean',
    ),
   }),
  ]
@@ -859,7 +859,7 @@ function dialog(...children) {
     },
     tagName: 'button',
     textContent: 'Cancel',
-   })
+   }),
   )
  }
  const alertContainer = elem({
@@ -876,7 +876,7 @@ function dialog(...children) {
     if (
      isInsideElementWithClass(
       e.target,
-      'alert-container'
+      'alert-container',
      )
     ) {
      return
@@ -903,14 +903,14 @@ function getUrlData() {
    .map((x) =>
     typeof x === 'string'
      ? decodeURIComponent(x)
-     : undefined
+     : undefined,
    )
  if (
   typeof channel === 'string' &&
   channel.length > 512
  ) {
   politeAlert(
-   'channel must be 512 characters or less'
+   'channel must be 512 characters or less',
   )
   return { channel: '', messageChannel: '' }
  }
@@ -922,7 +922,7 @@ function getUrlData() {
  const messageChannel =
   typeof message === 'string'
    ? messageReplyChannel(channel, message)
-   : channel ?? ''
+   : (channel ?? '')
  return {
   control,
   channel: channel ?? '',
@@ -935,7 +935,7 @@ function hoursSinceStartOf2024(
  year,
  month,
  day,
- hour
+ hour,
 ) {
  const startDate = begin2024GMT()
 
@@ -943,17 +943,17 @@ function hoursSinceStartOf2024(
   year,
   month,
   day + 1,
-  hour
+  hour,
  )
 
  return Math.floor(
-  (date - startDate) / (1000 * 60 * 60)
+  (date - startDate) / (1000 * 60 * 60),
  )
 }
 
 async function networkChannelSeek(
  channel,
- hour
+ hour,
 ) {
  const headers = {}
  const activeSession = getActiveSession()
@@ -966,23 +966,23 @@ async function networkChannelSeek(
  }
  const response = await fetch(
   `${networkRootUrl(
-   env
+   env,
   )}/seek?channel=${encodeURIComponent(
-   channel
+   channel,
   )}&hour=${hour}${
    typeof activeSession?.url === 'string'
     ? `&kv=${encodeURIComponent(
-       activeSession?.url
+       activeSession?.url,
       )}`
     : ''
   }`,
-  { headers }
+  { headers },
  )
  if (!response.ok) {
   throw new Error(
    `${
     response.statusText
-   }: ${await response.text()}`
+   }: ${await response.text()}`,
   )
  }
  return response.json()
@@ -992,7 +992,7 @@ async function networkMessageSend(
  channel,
  message,
  velocity = 0,
- sessionId
+ sessionId,
 ) {
  const body = JSON.stringify({
   channel,
@@ -1019,7 +1019,7 @@ async function networkMessageSend(
   `${networkRootUrl(env)}/send${
    typeof activeSession?.url === 'string'
     ? `?kv=${encodeURIComponent(
-       activeSession?.url
+       activeSession?.url,
       )}`
     : ''
   }`,
@@ -1027,7 +1027,7 @@ async function networkMessageSend(
    method: 'POST',
    headers,
    body,
-  }
+  },
  )
 
  if (!resp.ok) {
@@ -1047,7 +1047,7 @@ async function networkMessageSend(
 
 async function networkMessageUnsend(
  channel,
- message
+ message,
 ) {
  const body = JSON.stringify({
   channel,
@@ -1069,7 +1069,7 @@ async function networkMessageUnsend(
   `${networkRootUrl(env)}/unsend${
    typeof activeSession?.url === 'string'
     ? `?kv=${encodeURIComponent(
-       activeSession?.url
+       activeSession?.url,
       )}`
     : ''
   }`,
@@ -1077,7 +1077,7 @@ async function networkMessageUnsend(
    method: 'POST',
    headers,
    body,
-  }
+  },
  )
 
  if (!resp.ok) {
@@ -1113,11 +1113,11 @@ async function getNews(chunk, callback) {
     ? `${
        hasChunk ? '&' : '?'
       }kv=${encodeURIComponent(
-       activeSession?.url
+       activeSession?.url,
       )}`
     : ''
   }`,
-  { headers }
+  { headers },
  )
  const news = await response.json()
  if (typeof callback === 'function') {
@@ -1128,7 +1128,7 @@ async function getNews(chunk, callback) {
 
 function setChannel(channel) {
  location.hash = `#/${encodeURIComponent(
-  channel
+  channel,
  )}`
 }
 
@@ -1139,7 +1139,7 @@ function randomId() {
    (Math.random() * 1e6)
     .toString(36)
     .replace('.', '')
-    .slice(0, 4)
+    .slice(0, 4),
   )
   .join('')
 }
@@ -1155,7 +1155,7 @@ function read(key, defaultValue) {
 function write(key, value) {
  localStorage.setItem(
   key,
-  JSON.stringify(value)
+  JSON.stringify(value),
  )
 }
 
@@ -1170,14 +1170,14 @@ function writeSessions(data) {
 function removeSession(sessionId) {
  writeSessions(
   listSessions().filter(
-   (x) => x.id !== sessionId
-  )
+   (x) => x.id !== sessionId,
+  ),
  )
 }
 
 function readSession(sessionId) {
  return read('tmi:sessions', []).find(
-  (x) => x.id === sessionId
+  (x) => x.id === sessionId,
  )
 }
 
@@ -1191,12 +1191,12 @@ function getActiveSession() {
 
 function writeSession(
  sessionId,
- newSessionData
+ newSessionData,
 ) {
  return writeSessions(
   listSessions().map((x) =>
-   x.id === sessionId ? newSessionData : x
-  )
+   x.id === sessionId ? newSessionData : x,
+  ),
  )
 }
 
@@ -1214,7 +1214,7 @@ function getActiveSessionId() {
  if (typeof localActiveSessionId !== 'string') {
   localActiveSessionId = read(
    'tmi:active-session',
-   PUBLIC_SESSION_ID
+   PUBLIC_SESSION_ID,
   )
  }
  return localActiveSessionId
@@ -1227,7 +1227,7 @@ function createSession() {
   .map(() =>
    (
     Math.round(100 * Math.random()) % 10
-   ).toString(10)
+   ).toString(10),
   )
   .join('')
  const sendEmailButton = elem({
@@ -1269,7 +1269,7 @@ Set a value:    POST <url>?key=<key>
   elem({
    tagName: 'p',
    textContent: `➋ Set the key "code" to ${JSON.stringify(
-    code
+    code,
    )}`,
   }),
   elem({
@@ -1304,17 +1304,17 @@ Set a value:    POST <url>?key=<key>
      try {
       if (continueButton?.parentElement) {
        continueButton.parentElement.removeChild(
-        continueButton
+        continueButton,
        )
       }
       const serverUrl = new URL(
-       e.target.url.value
+       e.target.url.value,
       )
       serverUrl.searchParams.set('key', 'code')
       serverUrl.searchParams.set('mode', 'disk')
       serverUrl.searchParams.set(
        'modeOptions.disk.basePath',
-       './.kv-public'
+       './.kv-public',
       )
       const serverUrlString =
        serverUrl.toString()
@@ -1325,12 +1325,12 @@ Set a value:    POST <url>?key=<key>
        'Please wait, giving you time to set the login value on your kv server...'
       let result = await createSessionWithKVUrl(
        serverUrlString,
-       code
+       code,
       )
       console.log({ result })
       if (result.success) {
        await new Promise((x) =>
-        setTimeout(x, 500)
+        setTimeout(x, 500),
        )
        waitingMessage.textContent =
         '✅ Connected'
@@ -1338,28 +1338,28 @@ Set a value:    POST <url>?key=<key>
        return
       }
       await new Promise((x) =>
-       setTimeout(x, 3000)
+       setTimeout(x, 3000),
       )
       async function reCheckNow() {
        if (continueButton?.parentElement) {
         continueButton.parentElement.removeChild(
-         continueButton
+         continueButton,
         )
        }
 
        waitingMessage.textContent = `Please wait, checking kv server now at ${e.target.url.value}...`
        result = await createSessionWithKVUrl(
         serverUrlString,
-        code
+        code,
        )
        await new Promise((x) =>
-        setTimeout(x, 500)
+        setTimeout(x, 500),
        )
        if (result.success) {
         waitingMessage.textContent =
          '✅ Connected'
         await new Promise((x) =>
-         setTimeout(x, 500)
+         setTimeout(x, 500),
         )
         closeModal()
         return
@@ -1383,7 +1383,7 @@ Set a value:    POST <url>?key=<key>
      } catch (e) {
       alert(
        e.message ??
-        'Something went wrong, please try again'
+        'Something went wrong, please try again',
       )
       e.target.removeChild(waitingMessage)
      } finally {
@@ -1392,13 +1392,13 @@ Set a value:    POST <url>?key=<key>
      }
     },
    },
-  })
+  }),
  )
 }
 
 async function createSessionWithKVUrl(
  url,
- expectedCode
+ expectedCode,
 ) {
  console.log({
   message: 'now checking url: ' + url,
@@ -1415,7 +1415,7 @@ async function createSessionWithKVUrl(
   return {
    success: false,
    error: `Expected ${JSON.stringify(
-    responseText
+    responseText,
    )} to be ${JSON.stringify(expectedCode)}`,
   }
  }
@@ -1438,11 +1438,11 @@ async function createSessionWithKVUrl(
 
 async function registerSessionWithUrl(
  sessionId,
- url
+ url,
 ) {
  const session = readSession(sessionId)
  const realm = realms.find(
-  (x) => x.session.id === sessionId
+  (x) => x.session.id === sessionId,
  )
  realm.realmTabLabel.textContent = session.url
  location.hash = session.hash
@@ -1451,14 +1451,14 @@ async function registerSessionWithUrl(
 
 async function registerSession(
  sessionId,
- control
+ control,
 ) {
  const session = readSession(sessionId)
  const realm = realms.find(
-  (x) => x.session.id === sessionId
+  (x) => x.session.id === sessionId,
  )
  realm.realmTabLabel.textContent = new URL(
-  session.url
+  session.url,
  ).host
  location.hash = session.hash
  return true
@@ -1497,7 +1497,7 @@ const themeNames = [
 const setTheme = (themeName) => {
  document.body.setAttribute(
   'data-theme',
-  themeName
+  themeName,
  )
  currentTheme = themeName
  localStorage.setItem('theme', themeName)
@@ -1508,6 +1508,6 @@ let currentTheme = localStorage.getItem('theme')
 if (currentTheme) {
  document.body.setAttribute(
   'data-theme',
-  currentTheme
+  currentTheme,
  )
 }

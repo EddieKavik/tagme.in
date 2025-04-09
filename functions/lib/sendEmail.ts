@@ -8,7 +8,7 @@ export interface Contact {
 export async function sendEmail(
  env: Env,
  to: Contact,
- body: string
+ body: string,
 ) {
  return fetch(
   'https://api.mailchannels.net/tx/v1/send',
@@ -38,6 +38,6 @@ export async function sendEmail(
      },
     ],
    }),
-  }
+  },
  )
 }
