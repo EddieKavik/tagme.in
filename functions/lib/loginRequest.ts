@@ -12,50 +12,50 @@ export interface LoginRequest {
 
 export async function createLoginRequest(
  kv: CivilMemoryKV,
- email: string
+ email: string,
 ): Promise<string> {
  const uniqueId = randomId()
 
  const key = {
   emailUniqueIdList: `auth.email.uniqueIdList#${email}`,
-  uniqueId: `auth.email.uniqueId#${uniqueId}`
+  uniqueId: `auth.email.uniqueId#${uniqueId}`,
  }
 
  const emailUniqueIdString = await kv.get(
-  key.emailUniqueIdList
+  key.emailUniqueIdList,
  )
  const emailUniqueIdList = [
   ...(typeof emailUniqueIdString === 'string'
    ? JSON.parse(emailUniqueIdString)
    : []),
-  uniqueId
+  uniqueId,
  ]
 
  await kv.set(
   key.emailUniqueIdList,
-  JSON.stringify(emailUniqueIdList)
+  JSON.stringify(emailUniqueIdList),
  )
 
  await kv.set(
   key.uniqueId,
   JSON.stringify({
    created: Date.now(),
-   email
-  })
+   email,
+  }),
  )
  return uniqueId
 }
 
 export async function getLoginRequest(
  kv: CivilMemoryKV,
- uniqueId: string
+ uniqueId: string,
 ): Promise<LoginRequest | undefined> {
  const key = {
-  uniqueId: `auth.email.uniqueId#${uniqueId}`
+  uniqueId: `auth.email.uniqueId#${uniqueId}`,
  }
 
  const loginRequestString = await kv.get(
-  key.uniqueId
+  key.uniqueId,
  )
 
  if (!loginRequestString) {
@@ -67,15 +67,15 @@ export async function getLoginRequest(
 
 export async function deleteLoginRequest(
  kv: CivilMemoryKV,
- uniqueId: string
+ uniqueId: string,
 ): Promise<LoginRequest | undefined> {
  const key = {
-  uniqueId: `auth.email.uniqueId#${uniqueId}`
+  uniqueId: `auth.email.uniqueId#${uniqueId}`,
  }
 
  const loginRequest = await getLoginRequest(
   kv,
-  uniqueId
+  uniqueId,
  )
 
  if (!loginRequest) {
@@ -85,22 +85,22 @@ export async function deleteLoginRequest(
  await kv.delete(key.uniqueId)
 
  const key2 = {
-  emailUniqueIdList: `auth.email.uniqueIdList#${loginRequest.email}`
+  emailUniqueIdList: `auth.email.uniqueIdList#${loginRequest.email}`,
  }
 
  const emailUniqueIdString = await kv.get(
-  key2.emailUniqueIdList
+  key2.emailUniqueIdList,
  )
 
  const emailUniqueIdList = [
   ...(typeof emailUniqueIdString === 'string'
    ? JSON.parse(emailUniqueIdString)
-   : [])
+   : []),
  ].filter((x) => x !== uniqueId)
 
  await kv.set(
   key2.emailUniqueIdList,
-  JSON.stringify(emailUniqueIdList)
+  JSON.stringify(emailUniqueIdList),
  )
 
  if (
@@ -117,14 +117,14 @@ export async function deleteLoginRequest(
 export async function approveLoginRequest(
  kv: CivilMemoryKV,
  uniqueId: string,
- code: string
+ code: string,
 ): Promise<string | true> {
  const key = {
-  uniqueId: `auth.email.uniqueId#${uniqueId}`
+  uniqueId: `auth.email.uniqueId#${uniqueId}`,
  }
 
  const loginRequestString = await kv.get(
-  key.uniqueId
+  key.uniqueId,
  )
 
  if (!loginRequestString) {
@@ -132,7 +132,7 @@ export async function approveLoginRequest(
  }
 
  const { created, email } = JSON.parse(
-  loginRequestString
+  loginRequestString,
  )
 
  if (
@@ -148,8 +148,8 @@ export async function approveLoginRequest(
   JSON.stringify({
    created,
    email,
-   code
-  })
+   code,
+  }),
  )
 
  return true

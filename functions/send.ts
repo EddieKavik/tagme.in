@@ -14,7 +14,7 @@ interface PostBody {
 }
 
 async function validateRequestBody(
- request: Request
+ request: Request,
 ): Promise<{ error?: string; data: PostBody }> {
  try {
   const data: PostBody = await request.json()
@@ -25,7 +25,7 @@ async function validateRequestBody(
   if (typeof data.message !== 'string') {
    return {
     error: 'message must be a string',
-    data
+    data,
    }
   }
 
@@ -33,14 +33,14 @@ async function validateRequestBody(
    return {
     error:
      'message must not start or end with space',
-    data
+    data,
    }
   }
 
   if (typeof data.channel !== 'string') {
    return {
     error: 'channel must be a string',
-    data
+    data,
    }
   }
 
@@ -49,7 +49,7 @@ async function validateRequestBody(
   ) {
    return {
     error: `message must be at least ${MIN_MESSAGE_LENGTH} characters long`,
-    data
+    data,
    }
   }
 
@@ -58,7 +58,7 @@ async function validateRequestBody(
   ) {
    return {
     error: `message must be ${MAX_MESSAGE_LENGTH} characters or less`,
-    data
+    data,
    }
   }
 
@@ -67,7 +67,7 @@ async function validateRequestBody(
   ) {
    return {
     error: `channel must be ${MAX_CHANNEL_LENGTH} characters or less`,
-    data
+    data,
    }
   }
 
@@ -75,14 +75,14 @@ async function validateRequestBody(
    return {
     error:
      'channel must not start or end with space',
-    data
+    data,
    }
   }
 
   if (typeof data.velocity !== 'number') {
    return {
     error: 'velocity must be a number',
-    data
+    data,
    }
   }
 
@@ -94,7 +94,7 @@ async function validateRequestBody(
    return {
     error:
      'velocity must be in the range -10..10',
-    data
+    data,
    }
   }
 
@@ -106,8 +106,8 @@ async function validateRequestBody(
    data: {
     channel: '',
     message: '',
-    velocity: 0
-   }
+    velocity: 0,
+   },
   }
  }
 }
@@ -116,7 +116,7 @@ export const onRequestPost: PagesFunction<Env> =
  async function (context) {
   const {
    error,
-   data: { message, channel, velocity }
+   data: { message, channel, velocity },
   } = await validateRequestBody(context.request)
 
   if (error) {
@@ -131,14 +131,14 @@ export const onRequestPost: PagesFunction<Env> =
   if (!kv) {
    return new Response(
     JSON.stringify({
-     error: 'not authorized'
+     error: 'not authorized',
     }),
     {
      headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
      },
-     status: 401
-    }
+     status: 401,
+    },
    )
   }
 
@@ -148,7 +148,7 @@ export const onRequestPost: PagesFunction<Env> =
     .send(message, velocity)
   } catch (error) {
    return new Response(error.stack, {
-    status: 400
+    status: 400,
    })
   }
 
