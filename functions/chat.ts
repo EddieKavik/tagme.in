@@ -139,7 +139,6 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
 
 // Helper function to extract suggested content (facts) from the AI response
 function extractSuggestedContent(responseText: string): string[] {
-  // Example logic: Extract sentences that contain numbers or specific keywords
   const facts = responseText
     .split('.')
     .map((sentence) => sentence.trim())
@@ -148,4 +147,39 @@ function extractSuggestedContent(responseText: string): string[] {
       /(important|key|notable|fact|suggest|recommend)/i.test(sentence) // Contains keywords
     );
   return facts;
+}
+
+async function sendMessage(context) {
+  // Show a loading indicator while waiting for the AI response
+  const messagesArea = this.chatContainer.querySelector('.chat-messages');
+  const loadingIndicator = document.createElement('div');
+  loadingIndicator.className = 'loading-indicator';
+  loadingIndicator.textContent = 'Thinking...';
+  messagesArea.appendChild(loadingIndicator);
+
+  try {
+    console.log('Sending request to:', this.chatURL); // Debugging: Log the URL
+    console.log('Request payload:', context); // Debugging: Log the payload
+
+    const response = await fetch(this.chatURL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(context),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const jsonResponse = await response.json();
+
+    // Remove the loading indicator
+    loadingIndicator.remove();
+
+    return jsonResponse;
+  } catch (error) {
+    console.error('Error sending message:', error);
+    loadingIndicator.textContent = 'Error fetching response.';
+    throw error;
+  }
 }

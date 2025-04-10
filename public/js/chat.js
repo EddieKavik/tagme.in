@@ -8,29 +8,24 @@ class ChatInterface {
 
         this.currentChannel = null;
         this.chatHistory = JSON.parse(localStorage.getItem('chatHistory')) || [];
-        this.chatURL = '/chat'; // Default chat API URL
-        this.menuVisible = false; // Track menu visibility
-        this.chatListVisible = false; // Track chat list visibility
+        this.chatURL = 'http://127.0.0.1:8787/chat'; // Ensure this matches your backend URL
+        this.menuVisible = false;
+        this.chatListVisible = false;
     }
 
     openChat(context = {}) {
         const { channel, messageId, message } = context;
-
         this.currentChannel = channel || 'default';
 
-        // Show the chat container
         this.chatContainer.style.display = 'block';
-        this.chatContainer.innerHTML = ''; // Clear previous content
+        this.chatContainer.innerHTML = '';
 
-        // Add header with menu and list
         const header = this.createHeader(channel);
         this.chatContainer.appendChild(header);
 
-        // Add chat messages area
         const messagesArea = this.createMessagesArea(message);
         this.chatContainer.appendChild(messagesArea);
 
-        // Add input area
         const inputArea = this.createInputArea(messageId);
         this.chatContainer.appendChild(inputArea);
     }
@@ -39,19 +34,16 @@ class ChatInterface {
         const header = document.createElement('div');
         header.className = 'chat-header';
 
-        // List icon
         const listButton = document.createElement('button');
         listButton.textContent = '📋';
         listButton.className = 'chat-list-button';
         listButton.onclick = () => this.toggleChatList();
         header.appendChild(listButton);
 
-        // Chat title
         const title = document.createElement('span');
         title.textContent = channel ? `Chat with Channel: #${channel}` : 'New Chat';
         header.appendChild(title);
 
-        // Menu button
         const menuButton = document.createElement('button');
         menuButton.textContent = '☰';
         menuButton.className = 'chat-menu-button';
@@ -82,10 +74,10 @@ class ChatInterface {
             menu.appendChild(setChatURL);
 
             const resetChatURL = document.createElement('button');
-            resetChatURL.textContent = 'Reset to Tag Me In chatbot';
+            resetChatURL.textContent = 'Reset to Default Chatbot';
             resetChatURL.onclick = () => {
-                this.chatURL = '/chat';
-                alert('Chat URL reset to default: /chat');
+                this.chatURL = 'http://127.0.0.1:8787/chat'; // Reset to default backend URL
+                alert('Chat URL reset to default: http://127.0.0.1:8787/chat');
             };
             menu.appendChild(resetChatURL);
 
@@ -165,8 +157,7 @@ class ChatInterface {
                 this.addMessage(userMessage, 'You');
                 const response = await this.sendMessage({
                     channel: this.currentChannel,
-                    messageId,
-                    message: userMessage,
+                    message: userMessage, // Ensure the message is sent correctly
                 });
                 this.addMessage(response.reply, 'AI');
                 this.displaySuggestedContent(response.suggestedContent);
@@ -185,13 +176,11 @@ class ChatInterface {
         messageElement.textContent = `${sender}: ${message}`;
         messagesArea.appendChild(messageElement);
 
-        // Save to history
         this.chatHistory.push(`${sender}: ${message}`);
         localStorage.setItem('chatHistory', JSON.stringify(this.chatHistory));
     }
 
     async sendMessage(context) {
-        // Show a loading indicator while waiting for the AI response
         const messagesArea = this.chatContainer.querySelector('.chat-messages');
         const loadingIndicator = document.createElement('div');
         loadingIndicator.className = 'loading-indicator';
@@ -199,16 +188,21 @@ class ChatInterface {
         messagesArea.appendChild(loadingIndicator);
 
         try {
+            console.log('Sending request to:', this.chatURL);
+            console.log('Request payload:', context);
+
             const response = await fetch(this.chatURL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(context),
             });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
             const jsonResponse = await response.json();
-
-            // Remove the loading indicator
             loadingIndicator.remove();
-
             return jsonResponse;
         } catch (error) {
             console.error('Error sending message:', error);
@@ -248,7 +242,6 @@ class ChatInterface {
 document.addEventListener('DOMContentLoaded', () => {
     window.chatInterface = new ChatInterface();
 
-    // Add a global 🗨️ button to open the chatbot
     const fullscreenButton = document.querySelector('.fullscreen-icon');
     if (fullscreenButton) {
         const chatButton = document.createElement('button');
