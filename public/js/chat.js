@@ -191,12 +191,30 @@ class ChatInterface {
     }
 
     async sendMessage(context) {
-        const response = await fetch(this.chatURL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(context),
-        });
-        return response.json();
+        // Show a loading indicator while waiting for the AI response
+        const messagesArea = this.chatContainer.querySelector('.chat-messages');
+        const loadingIndicator = document.createElement('div');
+        loadingIndicator.className = 'loading-indicator';
+        loadingIndicator.textContent = 'Thinking...';
+        messagesArea.appendChild(loadingIndicator);
+
+        try {
+            const response = await fetch(this.chatURL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(context),
+            });
+            const jsonResponse = await response.json();
+
+            // Remove the loading indicator
+            loadingIndicator.remove();
+
+            return jsonResponse;
+        } catch (error) {
+            console.error('Error sending message:', error);
+            loadingIndicator.textContent = 'Error fetching response.';
+            throw error;
+        }
     }
 
     displaySuggestedContent(suggestedContent) {
@@ -204,12 +222,13 @@ class ChatInterface {
             return;
         }
 
-        const messagesArea = this.chatContainer.querySelector('.chat-messages');
+        const suggestionsContainer = document.createElement('div');
+        suggestionsContainer.className = 'suggestions-container';
 
-        const suggestionsHeader = document.createElement('div');
-        suggestionsHeader.className = 'suggestions-header';
-        suggestionsHeader.textContent = 'Suggested Replies:';
-        messagesArea.appendChild(suggestionsHeader);
+        const header = document.createElement('div');
+        header.className = 'suggestions-header';
+        header.textContent = 'Suggested Replies:';
+        suggestionsContainer.appendChild(header);
 
         suggestedContent.forEach((suggestion) => {
             const suggestionElement = document.createElement('button');
@@ -219,8 +238,10 @@ class ChatInterface {
                 this.addMessage(suggestion, 'You');
                 this.sendMessage({ channel: this.currentChannel, message: suggestion });
             };
-            messagesArea.appendChild(suggestionElement);
+            suggestionsContainer.appendChild(suggestionElement);
         });
+
+        this.chatContainer.appendChild(suggestionsContainer);
     }
 }
 
