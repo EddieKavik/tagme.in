@@ -191,7 +191,7 @@ class ChatInterface {
             console.log('Sending request to:', this.chatURL);
             console.log('Request payload:', context);
 
-            const response = await fetch(this.chatURL, {
+            const response = await fetch(`${this.chatURL}?channel=${context.channel}&message=${encodeURIComponent(context.message)}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(context),
@@ -236,6 +236,39 @@ class ChatInterface {
         });
 
         this.chatContainer.appendChild(suggestionsContainer);
+    }
+
+    addChatButtonsToChannels() {
+        const channels = document.querySelectorAll('.channel:not(.has-chat-button)');
+        channels.forEach(channel => {
+            channel.classList.add('has-chat-button');
+            const chatButton = document.createElement('button');
+            chatButton.className = 'chat-button';
+            chatButton.innerHTML = '🗨️ Chat';
+            chatButton.onclick = (e) => {
+                e.stopPropagation();
+                this.currentChannel = channel.dataset.channel;
+                this.openChat({ channel: this.currentChannel });
+            };
+            channel.appendChild(chatButton);
+        });
+    }
+
+    addChatButtonsToMessages() {
+        const messages = document.querySelectorAll('.message:not(.has-chat-button)');
+        messages.forEach(message => {
+            message.classList.add('has-chat-button');
+            const chatButton = document.createElement('button');
+            chatButton.className = 'chat-button';
+            chatButton.innerHTML = '🗨️ Chat';
+            chatButton.onclick = (e) => {
+                e.stopPropagation();
+                this.currentChannel = message.dataset.channel;
+                this.currentMessage = message.dataset.messageId;
+                this.openChat({ channel: this.currentChannel, messageId: this.currentMessage, message: message.textContent });
+            };
+            message.appendChild(chatButton);
+        });
     }
 }
 

@@ -102,6 +102,40 @@ const composeTextarea = elem({
  tagName: 'textarea',
 })
 
+// Add event listener for sending messages with CMD+Enter or CTRL+Enter
+composeTextarea.addEventListener('keydown', function(event) {
+    // Check if Enter key is pressed with CMD or CTRL
+    if (event.key === 'Enter' && (event.metaKey || event.ctrlKey)) {
+        event.preventDefault(); // Prevent the default action (new line)
+        const { messageChannel } = getUrlData();
+        const messageText =
+            messageChannel === 'reactions'
+                ? `reaction${composeTextarea.value}`
+                : composeTextarea.value;
+
+        // Call your existing send message logic
+        if (messageText) {
+            (async () => {
+                if (
+                    (await withLoading(
+                        networkMessageSend(
+                            messageChannel,
+                            messageText,
+                            1
+                        )
+                    )) !== false
+                ) {
+                    focusOnMessage = messageText;
+                    composeTextarea.value = '';
+                    compose.classList.remove('active');
+                    document.body.focus();
+                    route();
+                }
+            })();
+        }
+    }
+});
+
 const realmControlContainer = elem({
  classes: ['realm-control', 'mode-other'],
 })

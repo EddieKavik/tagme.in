@@ -12,6 +12,12 @@ if (!GEMINI_API_KEY) {
 
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 
+// Define the expected structure of the request body
+interface ChatRequest {
+  channel?: string;
+  message: string;
+}
+
 export const onRequestPost: PagesFunction<Env> = async (context) => {
   const kv = await getKV(context, true);
 
@@ -26,7 +32,7 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
   }
 
   try {
-    const body = await context.request.json();
+    const body: ChatRequest = await context.request.json();
     const channel = body.channel || 'default';
     const userMessage = body.message;
 
@@ -147,39 +153,4 @@ function extractSuggestedContent(responseText: string): string[] {
       /(important|key|notable|fact|suggest|recommend)/i.test(sentence) // Contains keywords
     );
   return facts;
-}
-
-async function sendMessage(context) {
-  // Show a loading indicator while waiting for the AI response
-  const messagesArea = this.chatContainer.querySelector('.chat-messages');
-  const loadingIndicator = document.createElement('div');
-  loadingIndicator.className = 'loading-indicator';
-  loadingIndicator.textContent = 'Thinking...';
-  messagesArea.appendChild(loadingIndicator);
-
-  try {
-    console.log('Sending request to:', this.chatURL); // Debugging: Log the URL
-    console.log('Request payload:', context); // Debugging: Log the payload
-
-    const response = await fetch(this.chatURL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(context),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const jsonResponse = await response.json();
-
-    // Remove the loading indicator
-    loadingIndicator.remove();
-
-    return jsonResponse;
-  } catch (error) {
-    console.error('Error sending message:', error);
-    loadingIndicator.textContent = 'Error fetching response.';
-    throw error;
-  }
 }
