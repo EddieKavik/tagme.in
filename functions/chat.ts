@@ -28,7 +28,6 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
   try {
     const body = await context.request.json();
     const channel = body.channel || 'default';
-    const messageId = body.messageId; // Optional parameter for specific message ID
     const userMessage = body.message;
 
     if (!userMessage) {
@@ -41,23 +40,33 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
       });
     }
 
-    let contextMessages = 'No messages found in the channel.';
+    // Fetch all channel messages
+    const channelMessages = await kv.get(`seek#${channel}#999999999`);
+    if (!channelMessages) {
+      return new Response(JSON.stringify({ error: 'No messages found in the channel.' }), {
+        status: 404,
+        headers: {
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*',
+        },
+      });
+    }
 
-    // Fetch specific message and its replies if messageId is provided
-    if (messageId) {
-      const specificMessage = await kv.get(`message#${channel}#${messageId}`);
-      const replies = await kv.get(`replies#${channel}#${messageId}`);
-      contextMessages = specificMessage
-        ? `Message: ${specificMessage}\nReplies: ${replies || 'No replies found.'}`
-        : 'Message not found.';
-    } else {
-      // Fetch all channel messages if no specific messageId is provided
-      const channelMessages = await kv.get(`seek#${channel}#999999999`);
-      contextMessages = channelMessages || 'No messages found in the channel.';
+    // Limit context to 100,000 characters
+    let contextMessages = '';
+    let totalCharacters = 0;
+    const messages = JSON.parse(channelMessages); // Assuming channelMessages is stored as a JSON array
+    for (const message of messages) {
+      const messageText = message.text || ''; // Assuming each message has a `text` property
+      if (totalCharacters + messageText.length > 100000) {
+        break;
+      }
+      contextMessages += `${messageText}\n`;
+      totalCharacters += messageText.length;
     }
 
     // Use the Gemini API to generate a response
-    const modelName = 'gemini-pro'; // Corrected model name
+    const modelName = 'gemini-pro'; // Replace with a valid model name
     const model = genAI.getGenerativeModel({ model: modelName });
 
     console.log('Requesting Gemini API with:', {
@@ -68,7 +77,15 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
     let result;
     try {
       result = await model.generateContent({
-        contents: [{ parts: [{ text: `Channel: ${channel}\nMessage: ${userMessage}\nContext: ${contextMessages}` }] }],
+        contents: [
+          {
+            parts: [
+              { text: `Channel: ${channel}` },
+              { text: `Message: ${userMessage}` },
+              { text: `Context: ${contextMessages}` },
+            ],
+          },
+        ],
       });
     } catch (fetchError) {
       console.error('Error fetching from Gemini API:', fetchError.message);
