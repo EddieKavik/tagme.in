@@ -1,0 +1,15 @@
+{
+ "devDependencies": {
+  "@cloudflare/workers-types": "^4.20250129.0",
+  "@types/express": "^5.0.0",
+  "@types/node": "^20.17.16",
+  "express": "^4.21.2",
+  "tsx": "^4.19.2"
+ },
+ "type": "module",
+ "dependencies": {
+  "@google/genai": "^0.8.0",
+  "@google/generative-ai": "^0.24.0",
+  "dotenv": "^16.4.7"
+ }
+}
