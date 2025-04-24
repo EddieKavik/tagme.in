@@ -4,9 +4,10 @@
   bottom: 20px !important;
   right: 20px !important;
   width: 350px !important;
+  height: auto !important;
   max-height: 500px !important;
   border-radius: 10px !important;
-  overflow: hidden !important;
+  overflow: visible !important;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2) !important;
   z-index: 1000 !important;
   display: flex !important;
@@ -80,35 +81,43 @@
 }
 
 .chat-area {
- display: flex !important;
- flex: 1 1 auto !important;
- overflow: hidden !important;
- position: relative !important;
- width: 100% !important;
- height: calc(100% - 50px) !important;
- box-sizing: border-box !important;
+  display: flex !important;
+  flex: 1 1 auto !important;
+  overflow: visible !important;
+  position: relative !important;
+  width: 100% !important;
+  height: auto !important;
+  box-sizing: border-box !important;
 }
 
 .main-chat {
- display: flex !important;
- flex-direction: column !important;
- flex: 1 1 auto !important;
- overflow: hidden !important;
- width: 100% !important;
- box-sizing: border-box !important;
- position: relative !important;
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 1 auto !important;
+  overflow: visible !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  position: relative !important;
 }
 
 .messages-area {
- display: flex !important;
- flex-direction: column !important;
- flex: 1 1 auto !important;
- padding: 10px !important;
- overflow-y: auto !important;
- background-color: var(--color-bg-medium-dark) !important;
- width: 100% !important;
- box-sizing: border-box !important;
- position: relative !important;
+  flex: 1 1 auto !important;
+  padding: 10px !important;
+  overflow: visible !important;
+  background-color: var(--color-bg-medium-dark) !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  position: relative !important;
+  height: auto !important;
+  min-height: 200px !important;
+}
+
+.chat-messages {
+  height: auto !important;
+  overflow: visible !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
 }
 
 .input-area {
@@ -268,8 +277,8 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   z-index: 100;
   width: 280px;
-  max-height: 350px;
-  overflow-y: auto;
+  height: auto !important;
+  overflow: visible !important;
   padding-top: 20px;
 }
 
@@ -345,23 +354,12 @@
   border: 1px solid rgba(0, 0, 0, 0.1) !important;
 }
 
-/* Scrollbar Styling */
-.chat-messages::-webkit-scrollbar {
- width: 8px;
-}
-
-.chat-messages::-webkit-scrollbar-track {
- background: #f1f3f5;
- border-radius: 4px;
-}
-
-.chat-messages::-webkit-scrollbar-thumb {
- background: var(--color-bg-secondary);
- border-radius: 4px;
-}
-
+/* Remove scrollbar styles since we don't need them anymore */
+.chat-messages::-webkit-scrollbar,
+.chat-messages::-webkit-scrollbar-track,
+.chat-messages::-webkit-scrollbar-thumb,
 .chat-messages::-webkit-scrollbar-thumb:hover {
- background: var(--color-bg-secondary-hover);
+  display: none !important;
 }
 
 .suggestions-header {
@@ -493,6 +491,7 @@
   justify-content: center;
   align-items: center;
   z-index: 2000;
+  overflow: visible !important;
 }
 
 .name-popup {
@@ -502,6 +501,7 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
   width: 350px;
   text-align: center;
+  overflow: visible !important;
 }
 
 .name-popup h3 {
@@ -742,7 +742,8 @@
   background-color: var(--color-bg-light);
   color: var(--color-text-primary);
   font-family: inherit;
-  resize: vertical;
+  resize: none !important;
+  overflow: visible !important;
 }
 
 .recording-buttons {
@@ -811,6 +812,7 @@
     padding: 15px;
     margin: 10px 0;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: visible !important;
 }
 
 .scripts-header {
@@ -865,4 +867,18 @@
 
 .scripts-help li {
     margin: 5px 0;
+}
+
+/* Remove any remaining scroll-related styles */
+*::-webkit-scrollbar,
+*::-webkit-scrollbar-track,
+*::-webkit-scrollbar-thumb {
+  display: none !important;
+}
+
+/* Ensure all containers flow with main scroll */
+.chat-container *,
+#chat-container * {
+  overflow: visible !important;
+  height: auto !important;
 }

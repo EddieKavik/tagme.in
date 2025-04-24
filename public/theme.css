@@ -128,9 +128,25 @@ textarea {
  font-size: inherit;
 }
 
-body,
-html {
- margin: 0;
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  overflow-y: auto !important;
+  position: relative;
+  background-color: var(--color-bg-dark);
+}
+
+main {
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
+  overflow: visible !important;
 }
 
 .app-header {
@@ -138,13 +154,10 @@ html {
  display: flex;
  flex-direction: column;
  height: 148px;
- left: 0;
- overflow: visible;
- position: sticky;
- right: 0;
- top: -52px;
- transition: top 0.5s ease;
+ width: 100%;
+ position: relative;
  z-index: 1000;
+ background-color: var(--color-bg-medium);
 }
 
 body.scroll-zero .app-header,
@@ -202,20 +215,15 @@ body.scroll-zero .app-header {
 .app-accounts-container {
  flex-grow: 1;
  flex-shrink: 1;
- overflow: hidden;
+ overflow: visible !important;
 }
 
 .app-accounts {
- background-color: var(--color-bg-medium-dark);
- border-bottom: 1px solid
-  var(--color-border-dark);
- box-shadow: inset 0 -13px 0px
-  var(--color-border-dark);
  display: flex;
- flex-direction: row;
- height: 65px;
- overflow-x: scroll;
- overflow-y: hidden;
+ flex-wrap: nowrap;
+ gap: 10px;
+ padding: 10px;
+ overflow: visible !important;
  width: 100%;
 }
 
@@ -286,21 +294,6 @@ body.scroll-zero .app-header {
  right: 0;
  transition: opacity 0.5s ease;
  width: 100%;
-}
-
-main {
- box-sizing: border-box;
- line-height: 1.65;
- min-height: calc(100dvh - 79px - 78px);
-}
-
-main.mode-main {
- padding: 0 15px;
-}
-
-main > p {
- margin: 0;
- padding: 15px;
 }
 
 footer {
@@ -902,18 +895,14 @@ body.on-channel .display-on-message {
 }
 
 .dropdown {
- background-color: var(--color-bg-dark);
- max-height: calc(100dvh - 62px);
- box-shadow: 0 0 10px var(--color-shadow-dark);
- left: 50px;
- overflow-x: hidden;
- overflow-y: scroll;
+ position: absolute;
+ background: var(--color-bg-dark);
+ width: calc(100% - 100px);
+ height: auto !important;
+ max-height: none !important;
+ overflow: visible !important;
  padding: 4px 0;
- position: fixed;
- right: 50px;
- top: 95px;
- transition: top 0.5s ease;
- z-index: 3;
+ box-shadow: 0 0 10px var(--color-shadow-dark);
 }
 
 body.scroll-zero .dropdown,
@@ -1199,39 +1188,38 @@ body.light-mode .icon-yes {
 }
 
 .activity-container {
- height: fit-content;
- left: 0;
- min-height: 100dvh;
- padding: 8px;
- right: 0;
- top: 134px;
- z-index: 1;
+ position: relative !important;
+ width: 100% !important;
+ height: auto !important;
+ overflow: visible !important;
+ background-color: var(--color-bg-dark) !important;
+ padding: 20px !important;
+ box-sizing: border-box !important;
 }
 
 .activity-container-inner {
- background-color: var(--color-modal-backdrop);
- border-radius: 10px;
- border: 1px solid var(--color-border-dark);
- box-shadow: 0 0 10px var(--color-shadow-dark);
- height: fit-content;
- min-height: 100dvh;
- padding: 32px;
+ width: 100% !important;
+ height: auto !important;
+ overflow: visible !important;
+ position: relative !important;
+}
+
+.messages-area {
+ width: 100% !important;
+ height: auto !important;
+ overflow: visible !important;
+ position: relative !important;
+ padding: 20px !important;
+ box-sizing: border-box !important;
 }
 
 /* Date picker styles */
 .toolbar-extended {
- display: none;
- padding: 8px 10px;
+ position: sticky;
+ bottom: 0;
  background-color: var(--color-bg-medium-dark);
- border-bottom: 1px solid var(--color-border-dark);
- position: fixed;
- bottom: 60px;
- left: 0;
- right: 0;
- z-index: 1000;
- width: 100%;
- box-shadow: 0 -2px 8px rgba(0,0,0,0.2);
- justify-content: center;
+ border-top: 1px solid var(--color-border-dark);
+ z-index: 900;
 }
 
 body[data-mode='activity'] .toolbar-extended.mode-activity {
@@ -1673,11 +1661,9 @@ a.external-link::after {
  box-shadow: 0 0 10px var(--color-shadow-dark);
  box-sizing: border-box;
  line-height: 1.5;
- max-height: 80vh;
  max-width: 80vw;
  min-height: 120px;
- overflow-x: hidden;
- overflow-y: scroll;
+ overflow: visible !important;
  padding: 30px;
  white-space: pre-wrap;
  width: 640px;
@@ -2013,8 +1999,7 @@ body.light-mode button.brand {
  box-sizing: border-box;
  flex-shrink: 0;
  height: 45px;
- overflow-x: auto;
- overflow-y: hidden;
+ overflow: visible !important;
  padding: 7px;
  white-space: nowrap;
 }
@@ -2079,7 +2064,8 @@ body[data-mode='theme-selector']
  gap: 10px;
  min-height: calc(100dvh - 70px);
  padding: 10px;
- height: calc(100dvh - 70px);
+ height: auto !important;
+ overflow: visible !important;
 }
 
 body[data-mode='theme-selector']
@@ -2088,29 +2074,19 @@ body[data-mode='theme-selector']
  flex-direction: column;
  gap: 10px;
  flex-grow: 1;
- position: fixed;
- top: 50px;
- left: 0;
- right: 0;
- bottom: 0;
- overflow: hidden;
- background-color: var(--color-bg-medium);
- z-index: 999;
+ position: relative !important;
+ overflow: visible !important;
 }
 
 body[data-mode='theme-selector']
  .theme-selector-theme-list {
- align-content: flex-start;
- align-items: flex-start;
  display: flex;
  flex-direction: row;
  flex-flow: column wrap-reverse;
  flex-wrap: wrap;
  gap: 10px;
- height: calc(100dvh - 328px);
- justify-content: flex-start;
- overflow-x: auto;
- overflow-y: hidden;
+ height: auto !important;
+ overflow: visible !important;
 }
 
 body[data-mode='theme-selector']
@@ -2549,10 +2525,9 @@ body.light-mode[data-theme='black']
 body {
  filter: brightness(1) contrast(1) blur(0);
  font-family: Vera, sans-serif;
- height: fit-content;
- line-height: 1.5;
- min-height: 100dvh;
- transition: filter 1.5s ease;
+ margin: 0;
+ min-height: 100vh;
+ overflow-x: hidden;
 }
 
 body[data-starting] {
@@ -2575,12 +2550,10 @@ body[data-starting] {
  flex-grow: 0;
  flex-wrap: wrap;
  gap: 5px;
- height: fit-content;
+ height: auto !important;
  max-width: 128px;
- max-height: 25vh;
+ overflow: visible !important;
  min-width: 50%;
- overflow-x: auto;
- overflow-y: hidden;
  margin: 15px 0;
 }
 
@@ -2816,4 +2789,21 @@ div.reaction-reaction
  cursor: help;
  font-size: 14px;
  font-weight: bold;
+}
+
+/* Ensure content flows normally */
+.mode-main, .mode-activity, .mode-other {
+ position: relative !important;
+ width: 100% !important;
+ height: auto !important;
+ overflow: visible !important;
+}
+
+/* Keep chat container fixed but everything else flows */
+.chat-container,
+#chat-container {
+ position: fixed !important;
+ bottom: 20px !important;
+ right: 20px !important;
+ z-index: 1000 !important;
 }

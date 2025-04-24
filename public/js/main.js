@@ -295,15 +295,15 @@ function scrolledPastBottom(
  exemptZeroScroll = false
 ) {
  if (
-  (!exemptZeroScroll && body.scrollTop < 1) ||
+  (!exemptZeroScroll && window.scrollY < 1) ||
   !element.checkVisibility()
  ) {
   return false
  }
  const bottom = Math.ceil(
   document.documentElement.scrollHeight -
-   body.scrollTop -
-   document.documentElement.clientHeight
+   window.scrollY -
+   window.innerHeight
  )
  const elementBottom = Math.ceil(
   document.documentElement.scrollHeight -
@@ -315,24 +315,24 @@ function scrolledPastBottom(
 let lastScrollY = 0
 let addTimeout
 let removeTimeout
-body.addEventListener('scroll', () => {
+window.addEventListener('scroll', () => {
  clearTimeout(addTimeout)
  clearTimeout(removeTimeout)
- if (body.scrollTop < lastScrollY) {
+ if (window.scrollY < lastScrollY) {
   addTimeout = setTimeout(() =>
-   body.classList.add('scroll-up')
+   document.body.classList.add('scroll-up')
   )
  } else {
   removeTimeout = setTimeout(
-   () => body.classList.remove('scroll-up'),
+   () => document.body.classList.remove('scroll-up'),
    500
   )
  }
- lastScrollY = body.scrollTop
+ lastScrollY = window.scrollY
  if (lastScrollY > 0) {
-  body.classList.remove('scroll-zero')
+  document.body.classList.remove('scroll-zero')
  } else {
-  body.classList.add('scroll-zero')
+  document.body.classList.add('scroll-zero')
  }
  if (
   scrolledPastBottom(

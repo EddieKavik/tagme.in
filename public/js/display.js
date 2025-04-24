@@ -1756,14 +1756,12 @@ function displayActivity() {
  }
 
  function isScreenFilled(element) {
-  const container = element.closest('.activity-container');
-  if (!container) return true;
-  
-  const containerRect = container.getBoundingClientRect();
+  // Check if content height is less than viewport height
   const elementRect = element.getBoundingClientRect();
+  const viewportHeight = window.innerHeight;
   
-  // Check if content height is less than container height
-  return elementRect.height >= containerRect.height;
+  // Check if content height is less than viewport height
+  return elementRect.height >= viewportHeight;
  }
 
  async function show() {
@@ -1772,14 +1770,14 @@ function displayActivity() {
   document.body.setAttribute('data-mode', 'activity');
   await load();
   fakeScroll();
-  scrollToTop();
+  window.scrollTo(0, 0);
  }
 
  function hide() {
   restoreLastKnownMode(-1);
   isVisible = false;
   nextChunk = undefined;
-  scrollToTop(lastScrollPosition);
+  window.scrollTo(0, lastScrollPosition);
  }
 
  let lastMessages = [];
@@ -1881,8 +1879,11 @@ function displayActivity() {
     lastMessages.push(...newMessages);
     filterAgain();
     
-    // If this was the first load and the screen isn't filled, load more
-    if (chunk2 === undefined && !isScreenFilled(element)) {
+    // Check if we need to load more based on window scroll position
+    const scrollBottom = window.scrollY + window.innerHeight;
+    const documentHeight = document.documentElement.scrollHeight;
+    
+    if (scrollBottom >= documentHeight - 100) {
       await ensureScreenFilled();
     }
     
