@@ -1755,84 +1755,153 @@ function displayActivity() {
   }
  }
 
+ function isScreenFilled(element) {
+  const container = element.closest('.activity-container');
+  if (!container) return true;
+  
+  const containerRect = container.getBoundingClientRect();
+  const elementRect = element.getBoundingClientRect();
+  
+  // Check if content height is less than container height
+  return elementRect.height >= containerRect.height;
+ }
+
  async function show() {
-  lastScrollPosition = window.scrollY
-  isVisible = true
-  document.body.setAttribute(
-   'data-mode',
-   'activity'
-  )
-  await load()
-  fakeScroll()
-  scrollToTop()
+  lastScrollPosition = window.scrollY;
+  isVisible = true;
+  document.body.setAttribute('data-mode', 'activity');
+  await load();
+  fakeScroll();
+  scrollToTop();
  }
 
  function hide() {
-  restoreLastKnownMode(-1)
-  isVisible = false
-  nextChunk = undefined
-  scrollToTop(lastScrollPosition)
+  restoreLastKnownMode(-1);
+  isVisible = false;
+  nextChunk = undefined;
+  scrollToTop(lastScrollPosition);
  }
 
- let lastMessages = []
+ let lastMessages = [];
+ let loadingIndicator = null;
+
+ function showLoadingIndicator() {
+  if (loadingIndicator) return;
+  
+  loadingIndicator = elem({
+    classes: ['loading-indicator'],
+    textContent: 'Loading news...',
+  });
+  element.appendChild(loadingIndicator);
+ }
+
+ function hideLoadingIndicator() {
+  if (loadingIndicator && loadingIndicator.parentNode) {
+    loadingIndicator.parentNode.removeChild(loadingIndicator);
+    loadingIndicator = null;
+  }
+ }
 
  async function load() {
-  await loadMore(undefined, function () {
-   element.innerHTML = ''
-   lastMessages = []
-  })
+  showLoadingIndicator();
+  try {
+    await loadMore(undefined, function() {
+      element.innerHTML = '';
+      lastMessages = [];
+    });
+    
+    // After initial load, check if we need to load more to fill screen
+    await ensureScreenFilled();
+  } finally {
+    hideLoadingIndicator();
+  }
  }
 
- let isLoading = false
- let nextChunk = undefined
+ async function ensureScreenFilled() {
+  if (!isVisible) return;
+  
+  while (!isScreenFilled(element) && nextChunk > -1) {
+    const nextChunkValue = await loadMore();
+    if (nextChunkValue === -1 || nextChunkValue === undefined) break;
+    
+    // Small delay to prevent overwhelming the server
+    await new Promise(resolve => setTimeout(resolve, 100));
+  }
+ }
+
+ let isLoading = false;
+ let nextChunk = undefined;
  async function loadMore(chunk, callback) {
-  if (isLoading) {
-   return
+  if (isLoading) return;
+  
+  const chunk2 = typeof chunk === 'number' && !isNaN(chunk) ? chunk : nextChunk;
+  
+  // Don't show end of news for the first load attempt
+  if (typeof chunk2 === 'number' && !isNaN(chunk2) && chunk2 < 0) {
+    if (chunk2 < -1) return;
+    if (lastMessages.length > 0) endOfNews();
+    nextChunk--;
+    return;
   }
-  const chunk2 =
-   typeof chunk === 'number' && !isNaN(chunk)
-    ? chunk
-    : nextChunk
-  if (
-   typeof chunk2 === 'number' &&
-   !isNaN(chunk2) &&
-   chunk2 < 0
-  ) {
-   if (chunk2 < -1) {
-    return
-   }
-   endOfNews()
-   nextChunk--
-   return
+  
+  isLoading = true;
+  showLoadingIndicator();
+  
+  try {
+    const news = await getNews(chunk2, function(chunk) {
+      nextChunk = chunk - 1;
+      isLoading = false;
+    });
+    
+    // Handle empty or invalid response
+    if (chunk2 === undefined && (!news?.data || news.data.length === 0)) {
+      // Only show end of news if this isn't the first load
+      if (lastMessages.length > 0) {
+        endOfNews();
+      } else {
+        // Try loading the next chunk immediately
+        nextChunk = 0;
+        return loadMore(0);
+      }
+      return;
+    }
+    
+    if (typeof callback === 'function') {
+      callback();
+    }
+    
+    if (typeof nextChunk !== 'number') {
+      nextChunk = news.chunkId - 1;
+    }
+    
+    const newMessages = news.data?.map?.(newsMessage => 
+      attachNewsMessage(element, newsMessage)
+    ) ?? [];
+    
+    lastMessages.push(...newMessages);
+    filterAgain();
+    
+    // If this was the first load and the screen isn't filled, load more
+    if (chunk2 === undefined && !isScreenFilled(element)) {
+      await ensureScreenFilled();
+    }
+    
+    return nextChunk;
+  } catch (error) {
+    console.error('Error loading news:', error);
+    // Show error message to user
+    const errorMsg = elem({
+      classes: ['news-error'],
+      textContent: 'Error loading news. Please try again later.',
+    });
+    element.appendChild(errorMsg);
+    setTimeout(() => {
+      if (errorMsg.parentNode) errorMsg.parentNode.removeChild(errorMsg);
+    }, 5000);
+  } finally {
+    isLoading = false;
+    hideLoadingIndicator();
   }
-  isLoading = true
-  const news = await getNews(
-   chunk2,
-   function (chunk) {
-    nextChunk = chunk - 1
-    isLoading = false
-   }
-  )
-  if (
-   chunk2 === undefined &&
-   (!news?.data || news.data.length === 0)
-  ) {
-   endOfNews()
-   return
-  }
-  if (typeof callback === 'function') {
-   callback()
-  }
-  if (typeof nextChunk !== 'number') {
-   nextChunk = news.chunkId - 1
-  }
-  lastMessages.push(
-   ...(news.data?.map?.((newsMessage) =>
-    attachNewsMessage(element, newsMessage)
-   ) ?? [])
-  )
-  filterAgain()
-  return nextChunk
  }
 
  function clear() {
