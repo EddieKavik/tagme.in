@@ -163,8 +163,9 @@ export function store(kv: CivilMemoryKV) {
    collectionName,
    id
   )
-  const existingItemString =
-   await kv.get(itemKey)
+  const existingItemString = await kv.get(
+   itemKey
+  )
   const existingItem = existingItemString
    ? JSON.parse(existingItemString)
    : {}
