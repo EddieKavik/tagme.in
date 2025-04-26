@@ -44,8 +44,9 @@ export async function getKV(
        binding: env.TAGMEIN_AUTH_KV,
       })
   const sessionKey = `session.accessToken#${authorization}`
-  const sessionString =
-   await authKV.get(sessionKey)
+  const sessionString = await authKV.get(
+   sessionKey
+  )
   if (typeof sessionString !== 'string') {
    return
   }
