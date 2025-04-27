@@ -301,9 +301,13 @@ class ChatInterface {
 
         // Add initial system message if this is a new chat
         if (!this.messageHistory[this.currentChat] || this.messageHistory[this.currentChat].length === 0) {
+            // Use the correct channel display name for the welcome message
+            const displayChannel = (this.currentChannel === '' || this.currentChannel === 'default')
+                ? this.HOME_CHANNEL
+                : this.currentChannel;
             let initialMessage = this.userName && this.userName !== 'Guest' 
-                ? `Welcome to the ${this.HOME_CHANNEL} channel, ${this.userName}! How can I help you today?` 
-                : `Welcome to the ${this.HOME_CHANNEL} channel! How can I help you today?`;
+                ? `Welcome to the ${displayChannel} channel, ${this.userName}! How can I help you today?` 
+                : `Welcome to the ${displayChannel} channel! How can I help you today?`;
                 
             if (context.message) {
                 initialMessage = `You wanted to chat about: "${context.message}"\nHow can I help you with this?`;
