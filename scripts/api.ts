@@ -33,9 +33,9 @@ const app = express()
 const env = {
  // Example: You can add your KV bindings or other environment variables here.
  // authKV: createLocalKV('auth'),
+ GEMINI_API_KEY: process.env.GEMINI_API_KEY, // Gemini API key for AI features
  TAGMEIN_LOCAL_KV: process.env.TAGMEIN_LOCAL_KV,
- TAGMEIN_LOCAL_KV_BASEURL:
-  process.env.TAGMEIN_LOCAL_KV_BASEURL,
+ TAGMEIN_LOCAL_KV_BASEURL: process.env.TAGMEIN_LOCAL_KV_BASEURL,
  PORT: 8787,
 }
 

@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { GoogleGenerativeAI } from '@google/genai/node';
 import type { PagesFunction } from '@cloudflare/workers-types';
 import { Env } from './lib/env.js';
 

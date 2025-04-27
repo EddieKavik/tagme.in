@@ -1511,7 +1511,8 @@ class ChatInterface {
                 
                 const channelEl = document.createElement('div');
                 channelEl.className = 'chat-history-channel';
-                channelEl.textContent = `#${conv.channel || 'default'}`;
+                // Show house symbol or # for home channel, not #default
+                channelEl.textContent = channel === '' ? `#${this.HOME_CHANNEL}` : `#${conv.channel || 'default'}`;
                 
                 const timeEl = document.createElement('div');
                 timeEl.className = 'chat-history-time';

@@ -1964,7 +1964,7 @@ document.addEventListener(
    chatButton.onclick = () => {
     if (window.chatInterface) {
      window.chatInterface.openChat({
-      channel: 'default',
+      channel: ''
      })
     } else {
      console.error(

@@ -473,11 +473,12 @@
 
 .name-popup {
   background-color: var(--color-bg-medium);
-  padding: 30px;
+  padding: 30px 24px;
   border-radius: 8px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
   width: 350px;
   text-align: center;
+  box-sizing: border-box;
 }
 
 .name-popup h3 {
@@ -496,6 +497,7 @@
   background-color: var(--color-bg-light);
   color: var(--color-text-primary);
   font-size: 16px;
+  box-sizing: border-box;
 }
 
 .name-popup-buttons {
