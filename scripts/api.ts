@@ -34,9 +34,10 @@ const env = {
  // Example: You can add your KV bindings or other environment variables here.
  // authKV: createLocalKV('auth'),
  GEMINI_API_KEY: process.env.GEMINI_API_KEY, // Gemini API key for AI features
- TAGMEIN_LOCAL_KV: process.env.TAGMEIN_LOCAL_KV,
- TAGMEIN_LOCAL_KV_BASEURL: process.env.TAGMEIN_LOCAL_KV_BASEURL,
- PORT: 8787,
+ TAGMEIN_LOCAL_KV: process.env.TAGMEIN_LOCAL_KV, // Use local KV for TagMeIn
+ TAGMEIN_LOCAL_KV_BASEURL:
+  process.env.TAGMEIN_LOCAL_KV_BASEURL, // Base URL for local KV
+ PORT: 8787, // Port for the server
 }
 
 /**
@@ -110,8 +111,9 @@ async function adaptCfHandler(
 
  try {
   // Invoke the Cloudflare function handler.
-  const cfResponse: Response =
-   await cfHandler(context)
+  const cfResponse: Response = await cfHandler(
+   context
+  )
 
   // Set the HTTP status code from the Cloudflare Response.
   res.status(cfResponse.status)
@@ -161,63 +163,100 @@ function cfExpressHandler(
  *   to the corresponding HTTP verb.
  */
 async function loadCfFunctions() {
-    const functionsDir = path.join(process.cwd(), 'functions');
-    let files: string[] = [];
-    try {
-        files = await fs.readdir(functionsDir);
-    } catch (err) {
-        console.error('Error reading functions directory:', err);
-        return;
+ const functionsDir = path.join(
+  process.cwd(),
+  'functions'
+ )
+ let files: string[] = []
+ try {
+  files = await fs.readdir(functionsDir)
+ } catch (err) {
+  console.error(
+   'Error reading functions directory:',
+   err
+  )
+  return
+ }
+
+ // Support files ending in .js or .ts
+ const supportedExtensions = ['.js', '.ts']
+ for (const file of files) {
+  const ext = path.extname(file)
+  if (!supportedExtensions.includes(ext))
+   continue
+
+  const baseName = path.basename(file, ext)
+  const routePath = '/' + baseName
+  const modulePath = path.join(
+   functionsDir,
+   file
+  )
+
+  try {
+   // Dynamically import the module
+   const mod = await import(
+    pathToFileURL(modulePath).href
+   )
+
+   if (mod.onRequest) {
+    console.log(
+     `Registering route [ALL] ${routePath} from onRequest export`
+    )
+    app.all(
+     routePath,
+     cfExpressHandler(mod.onRequest)
+    )
+   } else {
+    // Map method-specific exports
+    const methodMapping: {
+     [key: string]:
+      | 'get'
+      | 'post'
+      | 'put'
+      | 'delete'
+      | 'patch'
+      | 'head'
+      | 'options'
+    } = {
+     onRequestGet: 'get',
+     onRequestPost: 'post',
+     onRequestPut: 'put',
+     onRequestDelete: 'delete',
+     onRequestPatch: 'patch',
+     onRequestHead: 'head',
+     onRequestOptions: 'options',
     }
 
-    // Support files ending in .js or .ts
-    const supportedExtensions = ['.js', '.ts'];
-    for (const file of files) {
-        const ext = path.extname(file);
-        if (!supportedExtensions.includes(ext)) continue;
-
-        const baseName = path.basename(file, ext);
-        const routePath = '/' + baseName;
-        const modulePath = path.join(functionsDir, file);
-
-        try {
-            // Dynamically import the module
-            const mod = await import(pathToFileURL(modulePath).href);
-
-            if (mod.onRequest) {
-                console.log(`Registering route [ALL] ${routePath} from onRequest export`);
-                app.all(routePath, cfExpressHandler(mod.onRequest));
-            } else {
-                // Map method-specific exports
-                const methodMapping: {
-                    [key: string]: 'get' | 'post' | 'put' | 'delete' | 'patch' | 'head' | 'options'
-                } = {
-                    onRequestGet: 'get',
-                    onRequestPost: 'post',
-                    onRequestPut: 'put',
-                    onRequestDelete: 'delete',
-                    onRequestPatch: 'patch',
-                    onRequestHead: 'head',
-                    onRequestOptions: 'options',
-                };
-
-                let registered = false;
-                for (const [exportName, httpMethod] of Object.entries(methodMapping)) {
-                    if (mod[exportName]) {
-                        console.log(`Registering route [${httpMethod.toUpperCase()}] ${routePath} from ${exportName} export`);
-                        app[httpMethod](routePath, cfExpressHandler(mod[exportName]));
-                        registered = true;
-                    }
-                }
-
-                if (!registered) {
-                    console.warn(`No valid Cloudflare function export found in ${file}`);
-                }
-            }
-        } catch (err) {
-            console.error(`Error loading module ${file}:`, err);
-        }
+    let registered = false
+    for (const [
+     exportName,
+     httpMethod,
+    ] of Object.entries(methodMapping)) {
+     if (mod[exportName]) {
+      console.log(
+       `Registering route [${httpMethod.toUpperCase()}] ${routePath} from ${exportName} export`
+      )
+      app[httpMethod](
+       routePath,
+       cfExpressHandler(mod[exportName])
+      )
+      registered = true
+     }
     }
+
+    if (!registered) {
+     console.warn(
+      `No valid Cloudflare function export found in ${file}`
+     )
+    }
+   }
+  } catch (err) {
+   console.error(
+    `Error loading module ${file}:`,
+    err
+   )
+  }
+ }
 }
 
 /**
