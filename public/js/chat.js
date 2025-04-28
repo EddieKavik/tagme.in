@@ -1066,7 +1066,8 @@ class ChatInterface {
                 body: JSON.stringify({
                     message: messageText,
                     channel: channel === this.HOME_CHANNEL ? 'default' : channel, // Convert to 'default' for backend
-                    history: this.messageHistory[this.currentChat] // Send chat history for context
+                    history: this.messageHistory[this.currentChat], // Send chat history for context
+                    userName: this.userName // Send the user's name to the backend
                 })
             });
 
@@ -1370,17 +1371,30 @@ class ChatInterface {
         } else {
             menu = document.createElement('div');
             menu.className = 'chat-menu';
+            // Add dark/light mode class
+            if (document.body.classList.contains('light-mode')) {
+                menu.classList.add('light-mode');
+            } else {
+                menu.classList.add('dark-mode');
+            }
+            // Match chat history dropdown styling
             menu.style.cssText = `
                 position: absolute;
                 top: 60px;
                 right: 10px;
-                background: white;
                 border-radius: 8px;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-                padding: 10px;
-                z-index: 1000;
-                min-width: 200px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+                z-index: 1002;
+                width: 200px;
+                overflow: visible;
+                padding: 5px;
+                background: var(--color-bg-medium);
+                color: var(--color-text-primary);
             `;
+            if (menu.classList.contains('dark-mode')) {
+                menu.style.background = 'var(--color-bg-medium-dark)';
+                menu.style.color = 'var(--color-text-primary)';
+            }
 
             const menuItems = [
                 { text: 'Set Chat URL', action: () => {
@@ -1412,6 +1426,14 @@ class ChatInterface {
                         localStorage.setItem('chatHistory', JSON.stringify(chatHistory));
                         // Clear only the current chat messages from the UI
                         this.chatContainer.querySelector('.messages-area').innerHTML = '';
+                        // Add the original welcome message after deletion
+                        let displayChannel = (this.currentChannel === '' || this.currentChannel === 'default')
+                            ? this.HOME_CHANNEL
+                            : this.currentChannel;
+                        let initialMessage = this.userName && this.userName !== 'Guest'
+                            ? `Welcome to the ${displayChannel} channel, ${this.userName}! How can I help you today?`
+                            : `Welcome to the ${displayChannel} channel! How can I help you today?`;
+                        this.addMessage(initialMessage, 'Tagmein');
                         alert('Current chat deleted.');
                     }
                 }},
@@ -1436,7 +1458,6 @@ class ChatInterface {
                     border: none;
                     border-radius: 4px;
                     background: none;
-                    color: #333;
                     text-align: left;
                     cursor: pointer;
                     transition: background-color 0.2s;
@@ -1445,10 +1466,15 @@ class ChatInterface {
                 // Add a red color to the Delete All Chats button
                 if (item.text === 'Delete All Chats') {
                     button.style.color = '#dc3545';
+                } else if (menu.classList.contains('dark-mode')) {
+                    button.style.color = '#fff';
                 }
 
                 button.onmouseover = () => {
                     button.style.backgroundColor = '#f0f0f0';
+                    if (menu.classList.contains('dark-mode')) {
+                        button.style.backgroundColor = '#3d3d3d';
+                    }
                 };
                 button.onmouseout = () => {
                     button.style.backgroundColor = 'transparent';
@@ -1484,6 +1510,8 @@ class ChatInterface {
         header.style.cssText = `
             text-align: center;
             font-weight: bold;
+            padding-top: 24px;
+            padding-bottom: 16px;
         `;
         header.textContent = 'Chat History';
         chatList.appendChild(header);

@@ -6,6 +6,7 @@ interface ChatRequest {
     message: string;
     channel: string;
     history?: Array<{ role: string; content: string }>;
+    userName?: string;
 }
 
 export const onRequestPost: PagesFunction<Env> = async (context) => {
@@ -24,11 +25,20 @@ export const onRequestPost: PagesFunction<Env> = async (context) => {
         const genAI = new GoogleGenerativeAI(context.env.GEMINI_API_KEY || '');
         const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
 
-        // Prepare chat history if provided
-        const history = data.history?.map(msg => ({
-            role: msg.role === 'user' ? 'user' : 'model',
-            parts: msg.content
-        })) || [];
+        // Prepare chat history if provided, and prepend a system message with the user's name if available
+        const history = [];
+        if (data.userName) {
+            history.push({
+                role: 'user',
+                parts: `My name is ${data.userName}. If you greet me or if I ask for my name, use it.`
+            });
+        }
+        if (data.history) {
+            history.push(...data.history.map(msg => ({
+                role: msg.role === 'user' ? 'user' : 'model',
+                parts: msg.content
+            })));
+        }
 
         // Start a chat
         const chat = model.startChat({
