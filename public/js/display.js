@@ -751,6 +751,17 @@ function attachMessage(
    new Date(message.data.seen)
   ),
  })
+ const chatButton = elem({
+  tagName: 'button',
+  textContent: '🗨️ Chat',
+  classes: ['btn-chat'],
+  events: {
+   click() {
+    console.log('Chat button clicked')
+    chatInterface.openChat({ channel, message }) // Pass message context
+   },
+  },
+ })
  const articleToolButtons = elem({
   classes: ['article-tool-buttons'],
   children: [agreeButton, disagreeButton],
@@ -776,7 +787,13 @@ function attachMessage(
  })
  articleTools.appendChild(
   elem({
-   style: { flexGrow: 1 },
+   style: {
+    flexGrow: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-around',
+    display: 'flex',
+   },
+   children: [chatButton],
   })
  )
  if (includeReactions) {
