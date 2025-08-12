@@ -1929,114 +1929,100 @@ body[data-mode='theme-selector'] .app-header {
 }
 
 :root {
- --theme-light--color-bg: #cccccc;
- --theme-dark--color-bg: #000000;
- --theme-blue--color-bg: #0000cc;
- --theme-red--color-bg: #cc0000;
- --theme-green--color-bg: #00cc00;
- --theme-yellow--color-bg: #cccc00;
- --theme-gray--color-bg: #808080;
- --theme-cyan--color-bg: #00cccc;
- --theme-magenta--color-bg: #cc00cc;
- --theme-darkred--color-bg: #400000;
- --theme-purple--color-bg: #800080;
- --theme-orange--color-bg: #962e04;
- --theme-pink--color-bg: #c72bbf;
- --theme-brown--color-bg: #97451e;
- --theme-gray--color-bg: #808080;
- --theme-white--color-bg: #cccccc;
- --theme-black--color-bg: #000000;
-}
-
-:root body.light-mode {
- --theme-light--color-bg: #cccccc;
- --theme-dark--color-bg: #666666;
- --theme-blue--color-bg: #6666cc;
- --theme-red--color-bg: #cc6666;
- --theme-green--color-bg: #66cc66;
- --theme-yellow--color-bg: #cccc66;
- --theme-gray--color-bg: #d6d6d6;
- --theme-cyan--color-bg: #66cccc;
- --theme-magenta--color-bg: #cc66cc;
- --theme-darkred--color-bg: #800000;
- --theme-purple--color-bg: #d666d6;
- --theme-orange--color-bg: #ee7f36;
- --theme-pink--color-bg: #d6abd4;
- --theme-brown--color-bg: #97651e;
- --theme-gray--color-bg: #d6d6d6;
+ /* Well-balanced, researched color palette for dark mode */
+ --theme-light--color-bg: #f8f9fa;
+ --theme-dark--color-bg: #1a1a1a;
+ --theme-blue--color-bg: #2563eb;
+ --theme-red--color-bg: #dc2626;
+ --theme-green--color-bg: #16a34a;
+ --theme-yellow--color-bg: #ca8a04;
+ --theme-gray--color-bg: #6b7280;
+ --theme-cyan--color-bg: #0891b2;
+ --theme-magenta--color-bg: #c026d3;
+ --theme-darkred--color-bg: #7f1d1d;
+ --theme-purple--color-bg: #7c3aed;
+ --theme-orange--color-bg: #ea580c;
+ --theme-pink--color-bg: #ec4899;
+ --theme-brown--color-bg: #92400e;
  --theme-white--color-bg: #ffffff;
  --theme-black--color-bg: #000000;
 }
 
+:root body.light-mode {
+ /* Well-balanced, researched color palette for light mode */
+ --theme-light--color-bg: #f8f9fa;
+ --theme-dark--color-bg: #6b7280;
+ --theme-blue--color-bg: #3b82f6;
+ --theme-red--color-bg: #ef4444;
+ --theme-green--color-bg: #22c55e;
+ --theme-yellow--color-bg: #eab308;
+ --theme-gray--color-bg: #9ca3af;
+ --theme-cyan--color-bg: #06b6d4;
+ --theme-magenta--color-bg: #d946ef;
+ --theme-darkred--color-bg: #991b1b;
+ --theme-purple--color-bg: #8b5cf6;
+ --theme-orange--color-bg: #f97316;
+ --theme-pink--color-bg: #f472b6;
+ --theme-brown--color-bg: #a16207;
+ --theme-white--color-bg: #ffffff;
+ --theme-black--color-bg: #111827;
+}
+
 :root button[data-theme='blue'] {
  background-color: var(--theme-blue--color-bg);
- color: invert(var(--theme-blue--color-bg));
+ color: #ffffff;
 }
 :root button[data-theme='red'] {
  background-color: var(--theme-red--color-bg);
- color: invert(var(--theme-red--color-bg));
+ color: #ffffff;
 }
 :root button[data-theme='green'] {
  background-color: var(--theme-green--color-bg);
- color: invert(var(--theme-green--color-bg));
+ color: #ffffff;
 }
 :root button[data-theme='yellow'] {
- background-color: var(
-  --theme-yellow--color-bg
- );
- color: invert(var(--theme-yellow--color-bg));
+ background-color: var(--theme-yellow--color-bg);
+ color: #000000;
 }
 :root button[data-theme='gray'] {
  background-color: var(--theme-gray--color-bg);
- color: invert(var(--theme-gray--color-bg));
+ color: #ffffff;
 }
 :root button[data-theme='cyan'] {
  background-color: var(--theme-cyan--color-bg);
- color: invert(var(--theme-cyan--color-bg));
+ color: #ffffff;
 }
 :root button[data-theme='magenta'] {
- background-color: var(
-  --theme-magenta--color-bg
- );
- color: invert(var(--theme-magenta--color-bg));
+ background-color: var(--theme-magenta--color-bg);
+ color: #ffffff;
 }
 :root button[data-theme='darkred'] {
- background-color: var(
-  --theme-darkred--color-bg
- );
- color: invert(var(--theme-darkred--color-bg));
+ background-color: var(--theme-darkred--color-bg);
+ color: #ffffff;
 }
 :root button[data-theme='purple'] {
- background-color: var(
-  --theme-purple--color-bg
- );
- color: invert(var(--theme-purple--color-bg));
+ background-color: var(--theme-purple--color-bg);
+ color: #ffffff;
 }
 :root button[data-theme='orange'] {
- background-color: var(
-  --theme-orange--color-bg
- );
- color: invert(var(--theme-orange--color-bg));
+ background-color: var(--theme-orange--color-bg);
+ color: #ffffff;
 }
 :root button[data-theme='pink'] {
  background-color: var(--theme-pink--color-bg);
- color: invert(var(--theme-pink--color-bg));
+ color: #ffffff;
 }
 :root button[data-theme='brown'] {
  background-color: var(--theme-brown--color-bg);
- color: invert(var(--theme-brown--color-bg));
-}
-:root button[data-theme='gray'] {
- background-color: var(--theme-gray--color-bg);
- color: invert(var(--theme-gray--color-bg));
+ color: #ffffff;
 }
 :root button[data-theme='white'] {
  background-color: var(--theme-white--color-bg);
- color: invert(var(--theme-white--color-bg));
+ color: #000000;
 }
 :root button[data-theme='black'] {
  background-color: var(--theme-black--color-bg);
- color: invert(var(--theme-black--color-bg));
+ color: #ffffff;
 }
 
 .theme-filter {
