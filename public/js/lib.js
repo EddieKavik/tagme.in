@@ -1176,19 +1176,53 @@ function randomId() {
 }
 
 function read(key, defaultValue) {
- const data = localStorage.getItem(key)
+ // Try sessionStorage first, then fall back to localStorage
+ let data = sessionStorage.getItem(key)
  if (typeof data === 'string') {
   return JSON.parse(data)
  }
+ 
+ // Fall back to localStorage
+ data = localStorage.getItem(key)
+ if (typeof data === 'string') {
+  return JSON.parse(data)
+ }
+ 
  return defaultValue
 }
 
 function write(key, value) {
+ // Store in both sessionStorage and localStorage
+ // sessionStorage for session persistence, localStorage for fallback
+ sessionStorage.setItem(
+  key,
+  JSON.stringify(value)
+ )
  localStorage.setItem(
   key,
   JSON.stringify(value)
  )
 }
+
+function clearSessionData(key) {
+ // Clear from both sessionStorage and localStorage
+ sessionStorage.removeItem(key)
+ localStorage.removeItem(key)
+}
+
+function migrateSessionData() {
+ // Migrate existing localStorage data to sessionStorage on page load
+ const sessionKeys = ['tmi:active-session', 'tmi:sessions']
+ sessionKeys.forEach(key => {
+  const localData = localStorage.getItem(key)
+  if (localData && !sessionStorage.getItem(key)) {
+   sessionStorage.setItem(key, localData)
+  }
+ })
+}
+
+// Migrate existing session data on script load
+migrateSessionData()
 
 function listSessions() {
  return read('tmi:sessions', [])
@@ -1199,11 +1233,16 @@ function writeSessions(data) {
 }
 
 function removeSession(sessionId) {
- writeSessions(
-  listSessions().filter(
-   (x) => x.id !== sessionId
-  )
+ const updatedSessions = listSessions().filter(
+  (x) => x.id !== sessionId
  )
+ writeSessions(updatedSessions)
+ 
+ // If this was the active session, clear it
+ if (getActiveSessionId() === sessionId) {
+  clearSessionData('tmi:active-session')
+  localActiveSessionId = undefined
+ }
 }
 
 function readSession(sessionId) {
