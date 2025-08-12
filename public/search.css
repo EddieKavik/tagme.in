@@ -39,6 +39,6 @@
   padding: 4px;
 }
 
-.message.hidden, .reply.hidden {
+.message.search-hidden, .reply.search-hidden {
   display: none !important;
 }
