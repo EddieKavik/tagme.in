@@ -1,0 +1,4 @@
+.kv-*
+node_modules/
+.npm
+*.tsbuildinfo

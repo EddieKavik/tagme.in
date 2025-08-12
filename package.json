@@ -1,0 +1,18 @@
+{
+ "scripts": {
+  "dev": "wrangler pages dev public --compatibility-date=2025-02-01",
+  "simple": "node simple-server.js",
+  "serve": "python3 -m http.server -d public 8000"
+ },
+ "devDependencies": {
+  "@cloudflare/workers-types": "^4.20250129.0",
+  "@types/express": "^5.0.0",
+  "@types/node": "^20.17.16",
+  "express": "^4.21.2",
+  "tsx": "^4.19.2"
+ },
+ "type": "module",
+ "dependencies": {
+  "dotenv": "^16.4.7"
+ }
+}

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <title>Civil Memory Test Page</title>
+  <style>
+   body {
+    background-color: black;
+    color: white;
+    padding: 0 15px;
+   }
+   .mode-select {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    height: 42px;
+    align-items: center;
+    gap: 4px;
+   }
+   .mode-select input[type='text'] {
+    background-color: #80808080;
+    border: 1px solid #ffffff80;
+    color: #ffffffc0;
+    flex-grow: 1;
+    padding: 4px;
+    font-family: inherit;
+    font-size: inherit;
+   }
+   *::selection {
+    background-color: #fff;
+    color: #000;
+   }
+   *:focus {
+    box-shadow: inset 0 0 1px 1px #fff, 0 0 1px #fff;
+    outline: none;
+   }
+  </style>
+ </head>
+ <body>
+  <h1>Civil Memory Test Page</h1>
+
+  <h2>Modes</h2>
+  <div class="mode-select">
+   <input type="checkbox" id="disk" checked />
+   <label for="disk">disk</label>
+  </div>
+  <div class="mode-select">
+   <input type="checkbox" id="http" checked />
+   <label for="http">http with url</label>
+   <input
+    id="http-url"
+    placeholder="http://localhost:3333?mode=volatile"
+    type="text"
+    value="http://localhost:3333?mode=volatile"
+   />
+  </div>
+  <div class="mode-select">
+   <input type="checkbox" id="volatile" checked />
+   <label for="volatile">volatile</label>
+  </div>
+
+  <p>
+   <button onclick="runTests()">Run Tests</button>
+  </p>
+
+  <h2>Test Results</h2>
+  <pre id="results">Ready to start tests</pre>
+
+  <script>
+   // Assertion helper
+   function expect(result) {
+    const assertions = {
+     passed: null,
+     message: null,
+
+     toBeOk() {
+      if (this.passed === false) {
+       return this
+      }
+      this.passed = result.ok
+      this.message = 'Expected OK response'
+      return this
+     },
+
+     async toBeEmpty() {
+      if (this.passed === false) {
+       return this
+      }
+      const text = await result.text()
+      this.passed = result.ok && text === ''
+      this.message = `Expected empty but got ${JSON.stringify(text)}`
+      return this
+     },
+
+     async toEqual(expectedValue) {
+      if (this.passed === false) {
+       return this
+      }
+      const text = await result.text()
+      this.passed = result.ok && text === expectedValue
+      this.message = `Expected ${JSON.stringify(
+       expectedValue
+      )} but got ${JSON.stringify(text)}`
+      return this
+     },
+    }
+
+    return assertions
+   }
+
+   async function runTests() {
+    let totalPass = 0
+    let totalFail = 0
+
+    const results = document.getElementById('results')
+    results.textContent = ''
+
+    const testModes = ['disk', 'http', 'volatile'].filter(
+     (mode) => document.getElementById(mode).checked
+    )
+
+    const httpUrl = document.getElementById('http-url')
+
+    for (let mode of testModes) {
+     let modePass = 0
+     let modeFail = 0
+
+     // Test helper
+     async function runTest(name, testFn) {
+      results.textContent += `- ${name} ... `
+
+      try {
+       const result = await testFn()
+       if (result.passed) {
+        modePass++
+        totalPass++
+        results.textContent += `PASSED\n`
+       } else {
+        modeFail++
+        totalFail++
+        results.textContent += `FAILED: ${result.message}\n`
+       }
+      } catch (err) {
+       modeFail++
+       totalFail++
+       results.textContent += `ERROR: ${err}\n`
+      }
+     }
+
+     results.textContent += `Running tests for '${mode}' mode ${
+      mode === 'http' ? ` with url: '${httpUrl.value}'` : ''
+     }\n`
+     const value = JSON.stringify({ example: 'myvalue' })
+
+     const httpUrlParam =
+      mode === 'http' ? `&url=${encodeURIComponent(httpUrl.value)}` : ''
+
+     for (const key of ['mykey', 'mynamespace#mykey']) {
+      const k = JSON.stringify(key)
+
+      await runTest(`Delete key ${k} to reset`, async () => {
+       const resp = await fetch(
+        `/?mode=${mode}&key=${encodeURIComponent(key)}${httpUrlParam}`,
+        {
+         method: 'DELETE',
+        }
+       )
+
+       return expect(resp).toBeOk()
+      })
+
+      await runTest(`Get after delete ${k} should be empty`, async () => {
+       const resp = await fetch(
+        `/?mode=${mode}&key=${encodeURIComponent(key)}${httpUrlParam}`
+       )
+
+       return expect(resp).toBeOk().toBeEmpty()
+      })
+
+      await runTest(`Post value to ${k}`, async () => {
+       const resp = await fetch(
+        `/?mode=${mode}&key=${encodeURIComponent(key)}${httpUrlParam}`,
+        {
+         method: 'POST',
+         body: value,
+        }
+       )
+
+       return expect(resp).toBeOk()
+      })
+
+      await runTest(`Get value of ${k} after post`, async () => {
+       const resp = await fetch(
+        `/?mode=${mode}&key=${encodeURIComponent(key)}${httpUrlParam}`
+       )
+
+       return expect(resp).toBeOk().toEqual(value)
+      })
+
+      await runTest(`Delete key ${k} to clean up`, async () => {
+       const resp = await fetch(
+        `/?mode=${mode}&key=${encodeURIComponent(key)}${httpUrlParam}`,
+        {
+         method: 'DELETE',
+        }
+       )
+
+       return expect(resp).toBeOk()
+      })
+     }
+
+     // Print summary
+     results.textContent += `\nTest mode '${mode}' passed: ${modePass} failed: ${modeFail}\n\n`
+    }
+
+    // Print final summary
+    results.textContent += `Total passed: ${totalPass} failed: ${totalFail}\n`
+   }
+  </script>
+ </body>
+</html>

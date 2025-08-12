@@ -1,0 +1,37 @@
+{
+ "private": false,
+ "name": "@tagmein/civil-memory",
+ "version": "0.0.14",
+ "description": "Short and long-term memory for your web applications",
+ "main": "dist/index.js",
+ "types": "dist/index.d.ts",
+ "scripts": {
+  "build": "rm -rf dist && tsc",
+  "build:watch": "tsc --watch",
+  "test": "nodemon -w dist -w test/local -e html,js,mjs test/local/server.mjs",
+  "test:install": "cd test/cloudflare ; npm i ; cd ../.. ; cd test/vercel ; npm i ; cd ../.."
+ },
+ "keywords": [
+  "key",
+  "value",
+  "data",
+  "database",
+  "redis",
+  "blob",
+  "storage",
+  "memory",
+  "persistence",
+  "files"
+ ],
+ "author": "Nate Ferrero <nate@tagme.in>",
+ "license": "ISC",
+ "devDependencies": {
+  "@cloudflare/workers-types": "^4.20250129.0",
+  "@types/node": "^20.17.16",
+  "typescript": "^5.7.3"
+ },
+ "dependencies": {
+  "@vercel/blob": "^0.16.1",
+  "@vercel/kv": "^1.0.0"
+ }
+}

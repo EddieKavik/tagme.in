@@ -1,0 +1,12 @@
+{
+ "functions": {
+  "api/index.ts": {
+   "memory": 1024,
+   "maxDuration": 5
+  },
+  "api/objects.ts": {
+   "memory": 1024,
+   "maxDuration": 5
+  }
+ }
+}

@@ -1,0 +1,15 @@
+{
+ "name": "@tagmein/civil-memory_test_cloudflare",
+ "version": "0.0.0",
+ "description": "",
+ "main": "index.js",
+ "scripts": {},
+ "author": "Nate Ferrero <nate@tagme.in>",
+ "license": "ISC",
+ "devDependencies": {
+  "@cloudflare/workers-types": "^4.20231121.0"
+ },
+ "dependencies": {
+  "@tagmein/civil-memory": "^0.0.13"
+ }
+}
