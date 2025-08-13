@@ -652,6 +652,12 @@ function attachMessage(
   addYouTubeEmbed(content, message.text)
   addImageEmbed(content, message.text)
   addOpenGraphLink(content, message.text)
+  
+  // Add tour data to image containers
+  const imageContainers = content.querySelectorAll('.image-container')
+  imageContainers.forEach(container => {
+    container.setAttribute('data-tour', 'Click on images to view them in full screen gallery mode with navigation.')
+  })
  }
 
  const agreeButton = elem({

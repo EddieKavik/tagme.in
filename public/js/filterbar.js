@@ -6,7 +6,8 @@ let allTags = new Set()
 function createFilterBar() {
   console.log('Creating filter bar...')
   const filterBar = document.createElement('div')
-  filterBar.className = 'filter-bar'
+filterBar.className = 'filter-bar'
+filterBar.setAttribute('data-tour', 'Use filters to find specific types of content or messages.')
 
   // Filter icon
   const filterIcon = document.createElement('span')

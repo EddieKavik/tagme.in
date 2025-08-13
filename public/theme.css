@@ -1867,6 +1867,98 @@ body.light-mode button.brand {
  z-index: 100001;
 }
 
+/* Enhanced Tour Styles - 8-13-2025 */
+.tour-overlay {
+ position: fixed;
+ top: 0;
+ left: 0;
+ width: 100vw;
+ height: 100vh;
+ background-color: rgba(0, 0, 0, 0.7);
+ z-index: 100000;
+ pointer-events: auto;
+}
+
+.tour-popup {
+ position: fixed;
+ background-color: var(--color-bg-light, #2a2a2a);
+ border: 1px solid var(--color-border-medium, #444);
+ border-radius: 10px;
+ box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+ color: var(--color-text-primary, #fff);
+ min-width: 300px;
+ max-width: 400px;
+ z-index: 100001;
+ font-family: inherit;
+ animation: tourPopupFadeIn 0.3s ease-out;
+}
+
+@keyframes tourPopupFadeIn {
+ from {
+  opacity: 0;
+  transform: scale(0.9) translateY(10px);
+ }
+ to {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+ }
+}
+
+.tour-popup-content {
+ padding: 20px;
+ font-size: 16px;
+ line-height: 1.5;
+}
+
+.tour-popup-buttons {
+ display: flex;
+ border-top: 1px solid var(--color-border-medium, #444);
+ background-color: var(--color-bg-medium, #333);
+ border-bottom-left-radius: 10px;
+ border-bottom-right-radius: 10px;
+}
+
+.tour-popup-buttons button {
+ flex: 1;
+ background-color: var(--color-bg-medium, #333);
+ color: var(--color-text-primary, #fff);
+ border: none;
+ padding: 12px;
+ font-size: 14px;
+ font-weight: bold;
+ cursor: pointer;
+ transition: background-color 0.2s ease;
+}
+
+.tour-popup-buttons button:hover {
+ background-color: #444;
+}
+
+.tour-popup-buttons button:first-child {
+ border-bottom-left-radius: 10px;
+}
+
+.tour-popup-buttons button:last-child {
+ border-bottom-right-radius: 10px;
+ background-color: var(--color-bg-accent, #0080f0);
+}
+
+.tour-popup-buttons button:last-child:hover {
+ background-color: #0060c0;
+}
+
+.tour-popup-buttons button:disabled {
+ opacity: 0.5;
+ cursor: not-allowed;
+}
+
+/* Tour element highlighting */
+.tour-highlight {
+ outline: 3px solid #0080f0 !important;
+ outline-offset: 2px !important;
+ transition: outline 0.3s ease;
+}
+
 .tour-container *::selection {
  background-color: var(--color-text-primary);
  color: var(--color-bg-dark);

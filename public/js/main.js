@@ -188,6 +188,9 @@ const realmControlContainer = elem({
 })
 
 const compose = elem({
+ attributes: {
+  'data-tour': 'Type your messages here and press Enter to send them to the current channel.'
+ },
  children: [
   composeTextarea,
   elem({
