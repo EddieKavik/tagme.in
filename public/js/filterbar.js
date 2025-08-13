@@ -80,29 +80,39 @@ function updateFilterBar() {
   // Get all tags from visible messages
   allTags = extractAllTags()
   
-  // Create tag buttons
-  allTags.forEach(tag => {
-    const tagButton = document.createElement('button')
-    tagButton.textContent = `#${tag}`
-    tagButton.className = 'tag-button'
-    
-    if (tagFilter.has(tag)) {
-      tagButton.classList.add('active')
-    }
-    
-    tagButton.addEventListener('click', () => {
+  if (allTags.size === 0) {
+    // No tags found, show a message
+    const noTagsMsg = document.createElement('span')
+    noTagsMsg.textContent = 'No tags found in messages'
+    noTagsMsg.style.color = 'var(--text-secondary, #888)'
+    noTagsMsg.style.fontSize = '12px'
+    noTagsMsg.style.fontStyle = 'italic'
+    tagsContainer.appendChild(noTagsMsg)
+  } else {
+    // Create tag buttons
+    allTags.forEach(tag => {
+      const tagButton = document.createElement('button')
+      tagButton.textContent = `#${tag}`
+      tagButton.className = 'tag-button'
+      
       if (tagFilter.has(tag)) {
-        tagFilter.delete(tag)
-        tagButton.classList.remove('active')
-      } else {
-        tagFilter.add(tag)
         tagButton.classList.add('active')
       }
-      filterMessagesByTags()
+      
+      tagButton.addEventListener('click', () => {
+        if (tagFilter.has(tag)) {
+          tagFilter.delete(tag)
+          tagButton.classList.remove('active')
+        } else {
+          tagFilter.add(tag)
+          tagButton.classList.add('active')
+        }
+        filterMessagesByTags()
+      })
+      
+      tagsContainer.appendChild(tagButton)
     })
-    
-    tagsContainer.appendChild(tagButton)
-  })
+  }
   
   // Update filter status
   updateFilterStatus()

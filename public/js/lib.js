@@ -377,24 +377,34 @@ function addImageByUrl(
    }),
   ],
   events: {
-   click() {
-    if (
-     imageContainer.classList.contains(
-      'expanded'
-     )
-    ) {
-     imageContainerReferencePosition.parentElement.insertBefore(
-      imageContainer,
-      imageContainerReferencePosition
-     )
-     imageContainer.classList.remove('expanded')
-     restoreScrollPosition()
-     expandedElement = undefined
+   click(e) {
+    // Check if gallery system is available
+    if (window.gallery && window.gallery.openImageInGallery) {
+     // Use gallery system
+     const img = imageContainer.querySelector('img')
+     console.log('Opening image in gallery:', img.src)
+     window.gallery.openImageInGallery(img)
     } else {
-     captureScrollPosition()
-     imageContainer.classList.add('expanded')
-     expandedElement = imageContainer
-     document.body.appendChild(imageContainer)
+     console.log('Gallery not available, using fallback')
+     // Fallback to original behavior
+     if (
+      imageContainer.classList.contains(
+       'expanded'
+      )
+     ) {
+      imageContainerReferencePosition.parentElement.insertBefore(
+       imageContainer,
+       imageContainerReferencePosition
+      )
+      imageContainer.classList.remove('expanded')
+      restoreScrollPosition()
+      expandedElement = undefined
+     } else {
+      captureScrollPosition()
+      imageContainer.classList.add('expanded')
+      expandedElement = imageContainer
+      document.body.appendChild(imageContainer)
+     }
     }
    },
   },
