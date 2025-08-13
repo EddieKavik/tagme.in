@@ -422,8 +422,29 @@ function displayChannelMessage(
         : HOME_CHANNEL_ICON
       }`,
      }),
-     // Add Next option link
+     // Add Previous and Next option links
      ...(formattedMessageData.length > 1 ? [
+      elem({
+       tagName: 'span',
+       textContent: ' • ',
+      }),
+      elem({
+       attributes: {
+        href: getPreviousMessageLink(channel, formattedMessageData, messageText),
+        style: 'cursor: pointer; color: #007bff; text-decoration: none;',
+       },
+       tagName: 'a',
+       textContent: '⯇ Prev',
+       events: {
+        click: (e) => {
+         e.preventDefault()
+         const prevLink = getPreviousMessageLink(channel, formattedMessageData, messageText)
+         if (prevLink) {
+          window.location.hash = prevLink.replace('#', '')
+         }
+        },
+       },
+      }),
       elem({
        tagName: 'span',
        textContent: ' • ',
@@ -1962,4 +1983,18 @@ function getNextMessageLink(channel, formattedMessageData, currentMessageText) {
  
  const nextMessage = formattedMessageData[currentIndex + 1]
  return `/#/${encodeURIComponent(channel)}/${btoa(encodeURIComponent(nextMessage.text))}`
+}
+
+// Helper function to get the previous message link
+function getPreviousMessageLink(channel, formattedMessageData, currentMessageText) {
+ const currentIndex = formattedMessageData.findIndex(
+  (x) => x.text === currentMessageText
+ )
+ 
+ if (currentIndex === -1 || currentIndex === 0) {
+  return null // No previous message available
+ }
+ 
+ const previousMessage = formattedMessageData[currentIndex - 1]
+ return `/#/${encodeURIComponent(channel)}/${btoa(encodeURIComponent(previousMessage.text))}`
 }
