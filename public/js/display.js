@@ -422,6 +422,30 @@ function displayChannelMessage(
         : HOME_CHANNEL_ICON
       }`,
      }),
+     // Add Next option link
+     ...(formattedMessageData.length > 1 ? [
+      elem({
+       tagName: 'span',
+       textContent: ' • ',
+      }),
+      elem({
+       attributes: {
+        href: getNextMessageLink(channel, formattedMessageData, messageText),
+        style: 'cursor: pointer; color: #007bff; text-decoration: none;',
+       },
+       tagName: 'a',
+       textContent: 'Next ▶',
+       events: {
+        click: (e) => {
+         e.preventDefault()
+         const nextLink = getNextMessageLink(channel, formattedMessageData, messageText)
+         if (nextLink) {
+          window.location.hash = nextLink.replace('#', '')
+         }
+        },
+       },
+      }),
+     ] : []),
     ],
    })
   )
@@ -1924,4 +1948,18 @@ function attachNewsMessage(
    message: message.toLowerCase(),
   }
  }
+}
+
+// Helper function to get the next message link
+function getNextMessageLink(channel, formattedMessageData, currentMessageText) {
+ const currentIndex = formattedMessageData.findIndex(
+  (x) => x.text === currentMessageText
+ )
+ 
+ if (currentIndex === -1 || currentIndex === formattedMessageData.length - 1) {
+  return null // No next message available
+ }
+ 
+ const nextMessage = formattedMessageData[currentIndex + 1]
+ return `/#/${encodeURIComponent(channel)}/${btoa(encodeURIComponent(nextMessage.text))}`
 }
