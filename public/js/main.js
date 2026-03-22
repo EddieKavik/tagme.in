@@ -285,6 +285,15 @@ body.appendChild(messageContent)
 body.appendChild(scriptOutputReelContainer)
 body.appendChild(consentPrompt)
 body.appendChild(compose)
+
+// Add search toolbar after compose
+if (typeof window.initSearchToolbar === 'function') {
+ const searchToolbar = window.initSearchToolbar({ mainContent })
+ if (searchToolbar?.element) {
+  document.body.appendChild(searchToolbar.element)
+ }
+}
+
 body.appendChild(mainContent)
 body.appendChild(
  document.getElementById('footer')
