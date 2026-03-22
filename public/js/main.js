@@ -285,6 +285,27 @@ body.appendChild(messageContent)
 body.appendChild(scriptOutputReelContainer)
 body.appendChild(consentPrompt)
 body.appendChild(compose)
+
+// Initialize search toolbar
+const searchToolbar =
+ typeof window.initSearchToolbar === 'function'
+  ? window.initSearchToolbar({ mainContent })
+  : undefined
+
+// Add search toolbar after compose
+if (searchToolbar?.element) {
+ body.appendChild(searchToolbar.element)
+}
+
+// Create and add tag filter bar after compose
+if (
+ typeof window.createTagFilterBar === 'function'
+) {
+ const bar = window.createTagFilterBar()
+ if (bar) {
+  insertAfter(compose, bar)
+ }
+}
 body.appendChild(mainContent)
 body.appendChild(
  document.getElementById('footer')
