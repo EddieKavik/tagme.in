@@ -286,7 +286,10 @@ body.appendChild(scriptOutputReelContainer)
 body.appendChild(consentPrompt)
 body.appendChild(compose)
 
-// Initialize search toolbar
+// Add main content to DOM first
+body.appendChild(mainContent)
+
+// Initialize search toolbar after mainContent is in DOM
 const searchToolbar =
  typeof window.initSearchToolbar === 'function'
   ? window.initSearchToolbar({ mainContent })
@@ -306,7 +309,6 @@ if (
   insertAfter(compose, bar)
  }
 }
-body.appendChild(mainContent)
 body.appendChild(
  document.getElementById('footer')
 )
