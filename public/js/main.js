@@ -290,16 +290,6 @@ body.appendChild(
  document.getElementById('footer')
 )
 
-// Initialize and add search toolbar after app is loaded
-const searchToolbar =
- typeof window.initSearchToolbar === 'function'
-  ? window.initSearchToolbar({ mainContent })
-  : undefined
-
-if (searchToolbar?.element) {
- body.appendChild(searchToolbar.element)
-}
-
 function scrolledPastBottom(
  element,
  exemptZeroScroll = false
