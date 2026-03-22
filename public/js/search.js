@@ -62,10 +62,7 @@ const element = elem({
    tagName: 'span',
    textContent: 'Search:',
   }),
-  elem({
-   classes: ['grow'],
-   children: [searchInput],
-  }),
+  searchInput,
   elem({
    classes: ['clear-btn'],
    textContent: 'Clear',
