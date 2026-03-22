@@ -15,9 +15,18 @@ let searchInputFocused = false
 const filterMessages = () => {
  const newsItems = mainContent.querySelectorAll('.news')
  newsItems.forEach((newsItem) => {
+  // Only search within messages that are currently visible (not hidden by tag filters)
+  const isVisible = newsItem.style.display !== 'none'
+  
   if (currentSearchTerms.length === 0) {
-   newsItem.style.display = ''
+   // If no search terms, restore original visibility (respect tag filters)
+   newsItem.style.display = isVisible ? '' : 'none'
    return
+  }
+
+  // Only search within messages that are currently visible
+  if (!isVisible) {
+   return // Skip messages already hidden by tag filters
   }
 
   const text = newsItem.textContent.toLowerCase()
