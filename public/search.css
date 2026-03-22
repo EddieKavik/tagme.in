@@ -6,7 +6,7 @@
  padding: 15px;
  margin: 19px;
  display: flex;
- flex-wrap: wrap;
+ flex-wrap: nowrap;
  gap: 20px;
  align-items: center;
  justify-content: center;
@@ -37,8 +37,10 @@
  outline: none;
  line-height: 20px;
  font-weight: 500;
- width: 200px;
- flex: 0 0 auto;
+ width: 150px;
+ min-width: 120px;
+ max-width: 200px;
+ flex: 1 1 auto;
  margin: 0 10px;
 }
 
@@ -77,4 +79,30 @@
  background: #ff0000;
  transform: translateY(-1px);
  box-shadow: 0 2px 4px var(--color-shadow-dark);
+}
+
+/* Mobile-specific adjustments */
+@media (max-width: 768px) {
+ .search-toolbar {
+  gap: 10px;
+  padding: 10px;
+  margin: 10px;
+ }
+ 
+ .search-toolbar span {
+  margin: 0 2px;
+  font-size: 11px;
+ }
+ 
+ .search-toolbar input {
+  width: 120px;
+  min-width: 100px;
+  margin: 0 5px;
+ }
+ 
+ .search-toolbar .clear-btn {
+  margin: 0 2px;
+  font-size: 11px;
+  padding: 3px 6px;
+ }
 }

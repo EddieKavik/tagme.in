@@ -294,6 +294,14 @@ if (typeof window.initSearchToolbar === 'function') {
  }
 }
 
+// Add tag filter bar after search toolbar
+if (typeof window.createTagFilterBar === 'function') {
+ const bar = window.createTagFilterBar()
+ if (bar) {
+  document.body.appendChild(bar)
+ }
+}
+
 body.appendChild(mainContent)
 body.appendChild(
  document.getElementById('footer')
