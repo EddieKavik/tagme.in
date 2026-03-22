@@ -285,20 +285,19 @@ body.appendChild(messageContent)
 body.appendChild(scriptOutputReelContainer)
 body.appendChild(consentPrompt)
 body.appendChild(compose)
+
+// Add search toolbar after compose for better visibility
+if (typeof window.initSearchToolbar === 'function') {
+ const searchToolbar = window.initSearchToolbar({ mainContent })
+ if (searchToolbar?.element) {
+  document.body.appendChild(searchToolbar.element)
+ }
+}
+
 body.appendChild(mainContent)
 body.appendChild(
  document.getElementById('footer')
 )
-
-// Add search toolbar at the end after everything loads
-setTimeout(() => {
- if (typeof window.initSearchToolbar === 'function') {
-  const searchToolbar = window.initSearchToolbar({ mainContent })
-  if (searchToolbar?.element) {
-   document.body.appendChild(searchToolbar.element)
-  }
- }
-}, 100)
 
 function scrolledPastBottom(
  element,
