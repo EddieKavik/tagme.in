@@ -287,11 +287,12 @@ body.appendChild(consentPrompt)
 body.appendChild(compose)
 
 // Create and add tag filter bar after compose
+let bar = null
 if (typeof window.createTagFilterBar === 'function') {
-  const bar = window.createTagFilterBar()
-  if (bar) {
-    insertAfter(compose, bar)
-  }
+ bar = window.createTagFilterBar()
+ if (bar) {
+  insertAfter(compose, bar)
+ }
 }
 
 // Add search toolbar after tag filter bar
