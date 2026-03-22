@@ -290,6 +290,16 @@ body.appendChild(
  document.getElementById('footer')
 )
 
+// Add search toolbar at the end after everything loads
+setTimeout(() => {
+ if (typeof window.initSearchToolbar === 'function') {
+  const searchToolbar = window.initSearchToolbar({ mainContent })
+  if (searchToolbar?.element) {
+   document.body.appendChild(searchToolbar.element)
+  }
+ }
+}, 100)
+
 function scrolledPastBottom(
  element,
  exemptZeroScroll = false
