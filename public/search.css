@@ -20,12 +20,12 @@
 }
 
 .search-toolbar .search-label {
- color: #aaa;
+ color: white;
  font-weight: 600;
- font-size: 12px;
+ font-size: 14px;
  line-height: 20px;
  white-space: nowrap;
- margin-right: 8px;
+ margin-right: 5px;
 }
 
 .search-toolbar .search-icon {
