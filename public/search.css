@@ -20,7 +20,7 @@
 }
 
 .search-toolbar .search-label {
- color: var(--color-text-secondary);
+ color: #aaa;
  font-weight: 600;
  font-size: 12px;
  line-height: 20px;
