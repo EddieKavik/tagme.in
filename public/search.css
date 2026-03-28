@@ -21,7 +21,7 @@
 
 .search-toolbar .search-label {
  color: white;
- font-weight: 600;
+ font-weight: 400;
  font-size: 14px;
  line-height: 20px;
  white-space: nowrap;
@@ -99,7 +99,7 @@
   flex-wrap: nowrap;
  }
  
- .search-toolbar span {
+ .search-toolbar .search-label {
   font-size: 11px;
  }
  
