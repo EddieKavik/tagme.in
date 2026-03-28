@@ -3151,15 +3151,16 @@ body[data-mode='activity']
  color: var(--color-text-primary);
 }
 
-.tag-filter-bar span[style*='Filter by tags'] {
+.tag-filter-label {
  color: var(--color-text-secondary);
  font-weight: 600;
- text-transform: uppercase;
- letter-spacing: 0.5px;
+ font-size: 12px;
+ line-height: 20px;
+ white-space: nowrap;
  margin-right: 5px;
 }
 
-.tag-filter-bar button:last-child {
+.tag-filter-clear-btn {
  background: var(--color-bg-no-active);
  border: none;
  border-radius: 6px;
@@ -3170,16 +3171,17 @@ body[data-mode='activity']
  line-height: 20px;
  letter-spacing: 0.5px;
  opacity: 0;
+ margin-left: 10px;
  padding: 4px 8px;
  text-transform: uppercase;
  transition: all 0.2s ease;
 }
 
-.tag-filter-bar:hover button:last-child {
+.tag-filter-bar:hover .tag-filter-clear-btn {
  opacity: 1;
 }
 
-.tag-filter-bar button:last-child:hover {
+.tag-filter-clear-btn:hover {
  background: #ff0000;
  transform: translateY(-1px);
  box-shadow: 0 2px 4px var(--color-shadow-dark);

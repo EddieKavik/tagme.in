@@ -58,6 +58,7 @@ element.className = 'search-toolbar mode-main'
 
 // Create search label
 const searchLabel = document.createElement('span')
+searchLabel.className = 'search-label'
 searchLabel.textContent = 'Search:'
 
 // Create search icon (hidden)

@@ -28,10 +28,12 @@ window.createTagFilterBar = function () {
   children: [
    elem({
     tagName: 'span',
+    classes: ['tag-filter-label'],
     textContent: 'Filter by tags:',
    }),
    elem({
     tagName: 'button',
+    classes: ['tag-filter-clear-btn'],
     textContent: 'Clear All',
     events: {
      click: clearAllFilters,
