@@ -3156,6 +3156,7 @@ body[data-mode='activity']
  font-weight: 600;
  text-transform: uppercase;
  letter-spacing: 0.5px;
+ margin-right: 5px;
 }
 
 .tag-filter-bar button:last-child {
