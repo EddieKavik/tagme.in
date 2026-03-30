@@ -370,6 +370,11 @@ body.appendChild(
  document.getElementById('footer')
 )
 
+// Initialize tag filter after content is loaded
+if (typeof window.updateAvailableTags === 'function') {
+ window.updateAvailableTags()
+}
+
 function scrolledPastBottom(
  element,
  exemptZeroScroll = false
