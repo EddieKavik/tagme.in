@@ -594,6 +594,10 @@ async function route() {
 window.addEventListener('hashchange', route)
 
 async function firstRoute() {
+ // Ensure we start in main mode
+ if (!document.body.getAttribute('data-mode')) {
+  switchToMode('main')()
+ }
  await route()
 }
 
