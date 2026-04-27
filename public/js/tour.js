@@ -133,15 +133,21 @@ function tour() {
   const currentElement = elements[tourPointer]
   const box =
    currentElement.getBoundingClientRect()
+  
+  // Ensure tourElement is measured before positioning
+  tourElement.style.visibility = 'hidden'
+  tourElement.style.display = 'block'
   const self =
    tourElement.getBoundingClientRect()
+  tourElement.style.visibility = 'visible'
+
   const pad = 10
   
   // Get current scroll position
   const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
   const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
 
-  // Use absolute positioning relative to the document
+  // Use absolute positioning for the message box so it scrolls with the page
   tourElement.style.position = 'absolute'
   
   const moreRoomAbove =
@@ -151,18 +157,13 @@ function tour() {
   // Calculate available space in viewport
   const spaceAbove = box.top
   const spaceBelow = window.innerHeight - box.bottom
-  const spaceLeft = box.left
-  const spaceRight = window.innerWidth - box.right
   
-  // Position vertically (Viewport top + Scroll top)
+  // Position vertically (Relative to document)
   if (moreRoomAbove && spaceAbove >= self.height + pad) {
-   // Position above the element
    tourElement.style.top = `${scrollTop + box.top - self.height - pad}px`
   } else if (spaceBelow >= self.height + pad) {
-   // Position below the element
    tourElement.style.top = `${scrollTop + box.bottom + pad}px`
   } else {
-   // Fallback: position where there is more room
    if (spaceAbove > spaceBelow) {
     tourElement.style.top = `${scrollTop + Math.max(pad, box.top - self.height - pad)}px`
    } else {
@@ -171,15 +172,12 @@ function tour() {
   }
   tourElement.style.bottom = 'auto'
   
-  // Position horizontally (Viewport left + Scroll left)
-  if (moreRoomLeft && spaceRight >= self.width + pad) {
-   // Position to the right
-   tourElement.style.left = `${scrollLeft + box.right + pad}px`
-  } else if (spaceLeft >= self.width + pad) {
-   // Position to the left
-   tourElement.style.left = `${scrollLeft + box.left - self.width - pad}px`
+  // Position horizontally (Relative to document)
+  if (moreRoomLeft && box.right - self.width >= pad) {
+   tourElement.style.left = `${scrollLeft + box.right - self.width}px`
+  } else if (box.left + self.width <= window.innerWidth - pad) {
+   tourElement.style.left = `${scrollLeft + box.left}px`
   } else {
-   // Center horizontally if possible
    const leftPos = Math.max(pad, Math.min(
     window.innerWidth - self.width - pad,
     box.left
@@ -188,15 +186,29 @@ function tour() {
   }
   tourElement.style.right = 'auto'
   
-  // Position the highlight box (Absolute positioning with scroll offset)
+  // CRITICAL FIX: Position the highlight box using FIXED positioning
+  // so it uses the exact coordinates from getBoundingClientRect()
   Object.assign(tourSelf.style, {
-   position: 'absolute',
-   left: `${scrollLeft + box.left}px`,
-   top: `${scrollTop + box.top}px`,
+   position: 'fixed',
+   left: `${box.left}px`,
+   top: `${box.top}px`,
    height: `${box.height}px`,
    width: `${box.width}px`,
+   zIndex: '9999',
+   pointerEvents: 'none'
   })
   
+  // Ensure the container itself doesn't shift
+  Object.assign(tourShade.style, {
+   position: 'fixed',
+   top: '0',
+   left: '0',
+   width: '100%',
+   height: '100%',
+   pointerEvents: 'none',
+   zIndex: '9998'
+  })
+
   // Prevent horizontal scroll
   document.body.scrollLeft = 0
   
