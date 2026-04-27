@@ -137,62 +137,58 @@ function tour() {
    tourElement.getBoundingClientRect()
   const pad = 10
   
-  // Use absolute positioning relative to document to account for scroll
+  // Get current scroll position
+  const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+  const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+
+  // Use absolute positioning relative to the document
   tourElement.style.position = 'absolute'
-  
-  const scrollTop = window.scrollY || document.documentElement.scrollTop
-  const scrollLeft = window.scrollX || document.documentElement.scrollLeft
   
   const moreRoomAbove =
    box.top > window.innerHeight / 2
   const moreRoomLeft = box.left > window.innerWidth / 2
   
-  // Calculate available space
+  // Calculate available space in viewport
   const spaceAbove = box.top
   const spaceBelow = window.innerHeight - box.bottom
   const spaceLeft = box.left
   const spaceRight = window.innerWidth - box.right
   
-  // Position vertically (add scrollTop to convert viewport to document coordinates)
+  // Position vertically (Viewport top + Scroll top)
   if (moreRoomAbove && spaceAbove >= self.height + pad) {
    // Position above the element
    tourElement.style.top = `${scrollTop + box.top - self.height - pad}px`
-   tourElement.style.bottom = 'auto'
   } else if (spaceBelow >= self.height + pad) {
    // Position below the element
    tourElement.style.top = `${scrollTop + box.bottom + pad}px`
-   tourElement.style.bottom = 'auto'
   } else {
-   // Not enough space, position where there's more room
+   // Fallback: position where there is more room
    if (spaceAbove > spaceBelow) {
     tourElement.style.top = `${scrollTop + Math.max(pad, box.top - self.height - pad)}px`
-    tourElement.style.bottom = 'auto'
    } else {
     tourElement.style.top = `${scrollTop + Math.max(pad, box.bottom + pad)}px`
-    tourElement.style.bottom = 'auto'
    }
   }
+  tourElement.style.bottom = 'auto'
   
-  // Position horizontally (add scrollLeft to convert viewport to document coordinates)
+  // Position horizontally (Viewport left + Scroll left)
   if (moreRoomLeft && spaceRight >= self.width + pad) {
    // Position to the right
    tourElement.style.left = `${scrollLeft + box.right + pad}px`
-   tourElement.style.right = 'auto'
   } else if (spaceLeft >= self.width + pad) {
    // Position to the left
    tourElement.style.left = `${scrollLeft + box.left - self.width - pad}px`
-   tourElement.style.right = 'auto'
   } else {
    // Center horizontally if possible
-   const leftPos = Math.max(pad + scrollLeft, Math.min(
-    scrollLeft + window.innerWidth - self.width - pad,
-    scrollLeft + box.left + pad
+   const leftPos = Math.max(pad, Math.min(
+    window.innerWidth - self.width - pad,
+    box.left
    ))
-   tourElement.style.left = `${leftPos}px`
-   tourElement.style.right = 'auto'
+   tourElement.style.left = `${scrollLeft + leftPos}px`
   }
+  tourElement.style.right = 'auto'
   
-  // Position the highlight box (use absolute positioning with scroll offset)
+  // Position the highlight box (Absolute positioning with scroll offset)
   Object.assign(tourSelf.style, {
    position: 'absolute',
    left: `${scrollLeft + box.left}px`,
